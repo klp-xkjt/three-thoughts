@@ -1,0 +1,60 @@
+--- .\.gitignore ---
+/target
+
+
+--- .\Cargo.toml ---
+[package]
+name = "ts3"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+clap = { version = "4.6.1", features = ["derive"] }
+
+
+--- .\src\core\memory.rs ---
+pub struct Memory {
+    pub cells: Vec<u8>,
+    pub pointer: usize
+}
+impl Memory {
+    pub fn new() -> Self{
+        Memory { cells: vec![0; 65536], pointer: 0 }
+    }
+}
+
+--- .\src\core\mod.rs ---
+pub mod memory;
+
+--- .\src\lib.rs ---
+pub mod core;
+
+--- .\src\main.rs ---
+use clap::{Parser, Subcommand};
+use ts3::core::memory::Memory;
+
+#[derive(Parser)]
+#[command(version)]
+struct Cli {
+    #[command(subcommand)]
+    command: Commands
+}
+
+#[derive(Subcommand)]
+enum Commands {
+    Run {
+        file: String
+    }
+}
+
+fn main() {
+    let cli = Cli::parse();
+    match cli.command {
+        Commands::Run { file } => {
+            let mem = Memory::new();
+            println!("Memory has created, len: {}", mem.cells.len());
+            println!("File: {}", file)
+        }
+    }
+}
+
