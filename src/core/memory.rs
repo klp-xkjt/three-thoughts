@@ -36,7 +36,7 @@ impl Memory {
 
     pub fn expand(&mut self, addr: usize) {
         if addr >= self.cells.len() {
-            self.cells.resize(addr+1, 0);
+            self.cells.resize(addr + 1, 0);
         }
     }
 }
@@ -44,11 +44,17 @@ impl Memory {
 #[cfg(test)]
 mod tests {
 
-use super::*;
+    use super::*;
 
     #[test]
     fn new_test() {
-        assert_eq!(Memory::new(), Memory { cells: vec![0; 65536], pointer: 0})
+        assert_eq!(
+            Memory::new(),
+            Memory {
+                cells: vec![0; 65536],
+                pointer: 0
+            }
+        )
     }
 
     #[test]
