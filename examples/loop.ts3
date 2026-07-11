@@ -1,0 +1,13 @@
+[WhatDoIDo] Note === Loop Test: Print ABC 6 times ===
+[WhereAmI] Add 1
+[WhatDoIDo] Add 65
+[WhatDoIDo] Print
+[WhereAmI] Add 1
+[WhatDoIDo] Add 66
+[WhatDoIDo] Print
+[WhereAmI] Add 1
+[WhatDoIDo] Add 67
+[WhatDoIDo] Println
+[WhatDoIDo] ResetOrigin
+[WhatDoIDo] Loop 0,11,6
+[WhatDoIDo] Println

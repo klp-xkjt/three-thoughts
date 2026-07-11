@@ -1,3 +1,180 @@
+--- .\.gitignore ---
+/target
+
+
+--- .\License ---
+Copyright © 2026 <klp-xkjt>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+--- .\examples\condition.ts3 ---
+[WhatDoIDo] Note === 倒计时 5 到 0 ===
+
+[WhatDoIDo] Add 53
+
+[WhatDoIDo] IfSome 48,6
+[WhatDoIDo] Println
+[WhatDoIDo] Sub 1
+[WhatDoIDo] JumpTo 2
+[WhatDoIDo] Println
+
+--- .\examples\hello_world.ts3 ---
+[WhatDoIDo] Note This-is-a-"Hello-World!"-of-3Thoughts
+[WhatDoIDo] Add 72
+[WhatDoIDo] Print
+[WhereAmI] Add 1  
+[WhatDoIDo] Add 101
+[WhatDoIDo] Print
+[WhereAmI] Add 1
+[WhatDoIDo] Add 108
+[WhatDoIDo] Print
+[WhereAmI] Add 1
+[WhatDoIDo] Add 108
+[WhatDoIDo] Print
+[WhereAmI] Add 1
+[WhatDoIDo] Add 111
+[WhatDoIDo] Print
+[WhereAmI] Add 1
+[WhatDoIDo] Add 32
+[WhatDoIDo] Print
+[WhereAmI] Add 1
+[WhatDoIDo] Add 87
+[WhatDoIDo] Print
+[WhereAmI] Add 1
+[WhatDoIDo] Add 111
+[WhatDoIDo] Print
+[WhereAmI] Add 1
+[WhatDoIDo] Add 114
+[WhatDoIDo] Print
+[WhereAmI] Add 1
+[WhatDoIDo] Add 108
+[WhatDoIDo] Print
+[WhereAmI] Add 1
+[WhatDoIDo] Add 100
+[WhatDoIDo] Print
+[WhereAmI] Add 1
+[WhatDoIDo] Add 33
+[WhatDoIDo] Println
+
+[WhatDoIDo] Note This-is-a-"Hello-World!" reappearance
+[WhatDoIDo] Reset
+[WhatDoIDo] Add 72
+[WhatDoIDo] Print
+[WhereAmI] Add 1  
+[WhatDoIDo] Add 101
+[WhatDoIDo] Print
+[WhereAmI] Add 1
+[WhatDoIDo] Add 108
+[WhatDoIDo] Print
+[WhereAmI] Add 1
+[WhatDoIDo] Add 108
+[WhatDoIDo] Print
+[WhereAmI] Add 1
+[WhatDoIDo] Add 111
+[WhatDoIDo] Print
+[WhereAmI] Add 1
+[WhatDoIDo] Add 32
+[WhatDoIDo] Print
+[WhereAmI] Add 1
+[WhatDoIDo] Add 87
+[WhatDoIDo] Print
+[WhereAmI] Add 1
+[WhatDoIDo] Add 111
+[WhatDoIDo] Print
+[WhereAmI] Add 1
+[WhatDoIDo] Add 114
+[WhatDoIDo] Print
+[WhereAmI] Add 1
+[WhatDoIDo] Add 108
+[WhatDoIDo] Print
+[WhereAmI] Add 1
+[WhatDoIDo] Add 100
+[WhatDoIDo] Print
+[WhereAmI] Add 1
+[WhatDoIDo] Add 33
+[WhatDoIDo] Println
+
+--- .\examples\if_zero.ts3 ---
+[WhatDoIDo] Note === IfZero 测试 ===
+
+[WhatDoIDo] Add 40
+[WhatDoIDo] IfZero 6
+[WhatDoIDo] Println
+[WhatDoIDo] Sub 1
+[WhatDoIDo] JumpTo 2
+[WhatDoIDo] Println
+
+[WhatDoIDo] ResetOrigin
+
+--- .\examples\loop.ts3 ---
+[WhatDoIDo] Note === Loop Test: Print ABC 6 times ===
+[WhereAmI] Add 1
+[WhatDoIDo] Add 65
+[WhatDoIDo] Print
+[WhereAmI] Add 1
+[WhatDoIDo] Add 66
+[WhatDoIDo] Print
+[WhereAmI] Add 1
+[WhatDoIDo] Add 67
+[WhatDoIDo] Println
+[WhatDoIDo] ResetOrigin
+[WhatDoIDo] Loop 0,11,6
+[WhatDoIDo] Println
+
+--- .\examples\ts3.ts3 ---
+[WhatDoIDo] Note ========================================
+[WhatDoIDo] Note 三思综合演示（条件循环版）
+[WhatDoIDo] Note ========================================
+
+[WhatDoIDo] Note === WhoAmI：设定身份 ===
+[WhoAmI] Named Rustacean
+
+[WhatDoIDo] Note === WhereAmI：移动指针写入数据 ===
+[WhereAmI] Origin
+[WhereAmI] Add 1
+[WhatDoIDo] Add 65
+[WhereAmI] Add 1
+[WhatDoIDo] Add 66
+[WhereAmI] Add 1
+[WhatDoIDo] Add 67
+[WhereAmI] Origin
+
+[WhatDoIDo] Note === WhatDoIDo：循环打印3次 ===
+[WhatDoIDo] Add 3           # 设置循环计数器
+[WhatDoIDo] Note 循环开始
+[WhatDoIDo] IfZero 23       # 如果计数器为0，跳到结束
+[WhereAmI] Origin
+[WhatDoIDo] Print
+[WhereAmI] Add 1
+[WhatDoIDo] Print
+[WhereAmI] Add 1
+[WhatDoIDo] Print
+[WhereAmI] Origin
+[WhatDoIDo] Sub 1           # 计数器减1
+[WhatDoIDo] JumpTo 8        # 跳回检查条件
+
+[WhatDoIDo] Note === IfName：身份决定结尾 ===
+[WhatDoIDo] IfName Rustacean, 25
+[WhatDoIDo] Println
+[WhatDoIDo] JumpTo 26
+[WhatDoIDo] Println
+[WhatDoIDo] Println
+
+--- .\src\core\error.rs ---
+use thiserror::Error;
+
+#[derive(Debug, Error, PartialEq)]
+pub enum ThreeThoughtsError {
+    #[error("No instructions of 3Thoughts: {0}")]
+    NoInstructions(String),
+}
+
+
+--- .\src\core\execute.rs ---
 use crate::core::error::ThreeThoughtsError;
 use crate::core::instruction::*;
 use crate::core::loop_and_condition::LoopState;
@@ -486,3 +663,431 @@ mod tests {
         Ok(())
     }
 }
+
+
+--- .\src\core\instruction.rs ---
+use crate::core::loop_and_condition::LoopState;
+
+#[derive(Debug, PartialEq, Clone)]
+pub enum ThreeThoughts {
+    WhoAmI(WhoInstruction),
+    WhereAmI(WhereInstruction),
+    WhatDoIDo(WhatInstruction),
+}
+
+#[derive(Debug, PartialEq, Clone)]
+pub enum WhoInstruction {
+    Named(String),   // 命名
+    Renamed(String), // 重命名
+}
+
+#[derive(Debug, PartialEq, Clone)]
+pub enum WhereInstruction {
+    Origin,        // 回到 0 单元格
+    Keep,          // 保持当前单元格位置
+    JumpTo(usize), // 直接跳到某个单元格
+    Add(usize),    // 在原单元格位置基础上增加一定数量的单元格
+    Sub(usize),    // 在原单元格位置基础上减少一定数量的单元格
+}
+
+#[derive(Debug, PartialEq, Clone)]
+pub enum WhatInstruction {
+    Add(usize), // 单元格值增加一定值
+    Sub(usize), // 单元格值减少一定值
+    Loop(LoopState),
+    Print,                 // 输出当前单元格的值（不换行）
+    Println,               // 输出当前单元格的值（换行）
+    Note,                  // 注释
+    Reset,                 // 重置
+    ResetOrigin,           // 重置并使指针回到初始单元格
+    IfZero(usize),         // 如果当前单元格是 0，跳转到 PC
+    IfNotZero(usize),      // 如果当前单元格不是 0，跳转
+    IfSome(usize, usize),  // 如果当前单元格是某一数值，跳转
+    IfNotSome(usize, usize), 
+    IfName(String, usize), // 如果名字匹配，跳转
+    JumpTo(usize),         // 直接跳转 PC
+}
+
+
+--- .\src\core\loop_and_condition.rs ---
+#[derive(Debug, PartialEq, Clone, Default, Copy)]
+pub struct LoopState {
+    pub start_pc: usize,
+    pub end_pc: usize,
+    pub times: usize,
+}
+
+
+--- .\src\core\memory.rs ---
+#[derive(Debug, PartialEq)]
+pub struct Memory {
+    pub(crate) cells: Vec<u8>,
+    pub(crate) pointer: usize,
+}
+impl Memory {
+    pub fn new(mem: usize) -> Self {
+        Memory {
+            cells: vec![0; mem],
+            pointer: 0,
+        }
+    }
+    pub fn forward(&mut self, add: usize) {
+        let new_ptr = self.pointer + add;
+        if new_ptr >= self.cells.len() {
+            self.expand(new_ptr);
+        }
+        self.pointer = new_ptr;
+    }
+    pub fn backward(&mut self, sub: usize) {
+        self.pointer = self.pointer.saturating_sub(sub);
+    }
+    pub fn jump(&mut self, addr: usize) {
+        if addr >= self.cells.len() {
+            self.expand(addr);
+        }
+        self.pointer = addr;
+    }
+
+    pub fn current(&self) -> u8 {
+        self.cells[self.pointer]
+    }
+    pub fn set_current(&mut self, value: u8) {
+        self.cells[self.pointer] = value
+    }
+
+    pub fn expand(&mut self, addr: usize) {
+        if addr >= self.cells.len() {
+            self.cells.resize(addr + 1, 0);
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+
+    use super::*;
+
+    #[test]
+    fn new_test() {
+        assert_eq!(
+            Memory::new(65536),
+            Memory {
+                cells: vec![0; 65536],
+                pointer: 0
+            }
+        )
+    }
+
+    #[test]
+    fn ward_test() {
+        let mut memory = Memory::new(65536);
+        memory.forward(4);
+        assert_eq!(memory.pointer, 4);
+        memory.backward(2);
+        assert_eq!(memory.pointer, 2)
+    }
+
+    #[test]
+    fn jump() {
+        let mut memory = Memory::new(65536);
+        memory.jump(10);
+        assert_eq!(memory.pointer, 10)
+    }
+
+    #[test]
+    fn current() {
+        let mut memory = Memory::new(65536);
+        assert_eq!(memory.current(), 0);
+        memory.set_current(10);
+        assert_eq!(memory.cells[memory.pointer], 10)
+    }
+
+    #[test]
+    fn expand_test() {
+        let mut memory = Memory::new(65536);
+        for _ in 1..65535 {
+            memory.set_current(1);
+            memory.forward(1);
+        }
+        memory.forward(1);
+        assert_eq!(memory.cells.len(), 65536)
+    }
+}
+
+
+--- .\src\core\mod.rs ---
+pub mod error;
+pub mod execute;
+pub mod instruction;
+pub mod loop_and_condition;
+pub mod memory;
+pub mod parser;
+
+
+--- .\src\core\parser.rs ---
+use crate::core::error::*;
+use crate::core::instruction::*;
+use crate::core::loop_and_condition::LoopState;
+
+pub fn parse_instruction(ts3: &str) -> Result<ThreeThoughts, ThreeThoughtsError> {
+    let lines = ts3.lines();
+    for line in lines {
+        let parts = line.split_whitespace().collect::<Vec<_>>();
+        match parts.as_slice() {
+            ["[WhoAmI]", ..] => return Ok(ThreeThoughts::WhoAmI(parse_who(line)?)),
+            ["[WhereAmI]", ..] => return Ok(ThreeThoughts::WhereAmI(parse_where(line)?)),
+            ["[WhatDoIDo]", ..] => return Ok(ThreeThoughts::WhatDoIDo(parse_what(line)?)),
+            _ => continue,
+        }
+    }
+    Err(ThreeThoughtsError::NoInstructions(
+        "No matching instruction found".to_string(),
+    ))
+}
+
+pub fn get_sub(str: &str, index: usize) -> &str {
+    str.split_whitespace().nth(index).unwrap_or("")
+}
+pub fn get_values(str: &str) -> Vec<&str> {
+    str.split(",").collect::<Vec<&str>>()
+}
+
+pub fn parse_who(str: &str) -> Result<WhoInstruction, ThreeThoughtsError> {
+    let sub = get_sub(str, 1);
+    match sub {
+        "Named" => Ok(WhoInstruction::Named(get_sub(str, 2).to_string())),
+        "Renamed" => Ok(WhoInstruction::Renamed(get_sub(str, 2).to_string())),
+        _ => Err(ThreeThoughtsError::NoInstructions(format!(
+            "No instructions of WhoAmI: {}",
+            sub
+        ))),
+    }
+}
+
+pub fn parse_where(str: &str) -> Result<WhereInstruction, ThreeThoughtsError> {
+    let sub = get_sub(str, 1);
+    match sub {
+        "Origin" => Ok(WhereInstruction::Origin),
+        "Keep" => Ok(WhereInstruction::Keep),
+        "JumpTo" => Ok(WhereInstruction::JumpTo(
+            get_sub(str, 2).parse::<usize>().unwrap_or(0),
+        )),
+        "Add" => Ok(WhereInstruction::Add(
+            get_sub(str, 2).parse::<usize>().unwrap_or(0),
+        )),
+        "Sub" => Ok(WhereInstruction::Sub(
+            get_sub(str, 2).parse::<usize>().unwrap_or(0),
+        )),
+        _ => Err(ThreeThoughtsError::NoInstructions(format!(
+            "No instructions of WhereAmI: {}",
+            sub
+        ))),
+    }
+}
+
+pub fn parse_what(str: &str) -> Result<WhatInstruction, ThreeThoughtsError> {
+    let sub = get_sub(str, 1);
+    match sub {
+        "Print" => Ok(WhatInstruction::Print),
+        "Println" => Ok(WhatInstruction::Println),
+        "Loop" => {
+            let sub = get_sub(str, 2);
+            let vals = get_values(sub);
+            let loop_inst = LoopState {
+                start_pc: vals.get(0).and_then(|s| s.parse().ok()).unwrap_or(0),
+                end_pc: vals.get(1).and_then(|s| s.parse().ok()).unwrap_or(0),
+                times: vals.get(2).and_then(|s| s.parse().ok()).unwrap_or(0),
+            };
+            Ok(WhatInstruction::Loop(loop_inst))
+        }
+        "Add" => Ok(WhatInstruction::Add(
+            get_sub(str, 2).parse::<usize>().unwrap_or(0),
+        )),
+        "Sub" => Ok(WhatInstruction::Sub(
+            get_sub(str, 2).parse::<usize>().unwrap_or(0),
+        )),
+        "Note" => Ok(WhatInstruction::Note),
+        "Reset" => Ok(WhatInstruction::Reset),
+        "ResetOrigin" => Ok(WhatInstruction::ResetOrigin),
+        "IfZero" => Ok(WhatInstruction::IfZero(
+            get_sub(str, 2).parse::<usize>().unwrap_or(0),
+        )),
+        "IfNotZero" => Ok(WhatInstruction::IfNotZero(
+            get_sub(str, 2).parse::<usize>().unwrap_or(0),
+        )),
+        "IfSome" => {
+            let sub = get_sub(str, 2);
+            let vals = get_values(sub);
+            Ok(WhatInstruction::IfSome(
+                vals.get(0).and_then(|s| s.parse().ok()).unwrap_or(0),
+                vals.get(1).and_then(|s| s.parse().ok()).unwrap_or(0),
+            ))
+        }
+        "IfNotSome" => {
+            let sub = get_sub(str, 2);
+            let vals = get_values(sub);
+            Ok(WhatInstruction::IfNotSome(
+                vals.get(0).and_then(|s| s.parse().ok()).unwrap_or(0),
+                vals.get(1).and_then(|s| s.parse().ok()).unwrap_or(0),
+            ))
+        }
+        "IfName" => {
+            let sub = get_sub(str, 2);
+            let vals: Vec<String> = sub.split(',').map(|s| s.to_string()).collect();
+            let name = vals.get(0).cloned().unwrap_or_default();
+            let pc = vals.get(1).and_then(|s| s.parse().ok()).unwrap_or(0);
+            Ok(WhatInstruction::IfName(name, pc))
+        }
+        "JumpTo" => Ok(WhatInstruction::JumpTo(
+            get_sub(str, 2).parse::<usize>().unwrap_or(0),
+        )),
+        _ => Err(ThreeThoughtsError::NoInstructions(format!(
+            "No instructions of WhatDoIDo: {}",
+            sub
+        ))),
+    }
+}
+
+pub fn parse_program(content: &str) -> Result<Vec<ThreeThoughts>, ThreeThoughtsError> {
+    let mut instructions = Vec::new();
+    for line in content.lines() {
+        let trimmed = line.trim();
+        if trimmed.is_empty() {
+            continue;
+        }
+        let inst = parse_instruction(trimmed)?;
+        instructions.push(inst);
+    }
+    if instructions.is_empty() {
+        return Err(ThreeThoughtsError::NoInstructions(
+            "No valid instructions found".to_string(),
+        ));
+    }
+    Ok(instructions)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn sub_test() {
+        let str = "The quick brown fox jumps over the lazy dog.";
+        assert_eq!("brown", get_sub(str, 2));
+        assert_eq!("lazy", get_sub(str, 7));
+    }
+
+    #[test]
+    fn parse_who_test() {
+        let str1 = "[WhoAmI] Named I";
+        let str2 = "[WhoAmI] Renamed TrueI";
+        assert_eq!(parse_who(str1), Ok(WhoInstruction::Named("I".to_string())));
+        assert_eq!(
+            parse_who(str2),
+            Ok(WhoInstruction::Renamed("TrueI".to_string()))
+        );
+    }
+
+    #[test]
+    fn parse_where_test() {
+        let str1 = "[WhereAmI] JumpTo 10";
+        let str2 = "[WhereAmI] Add 10";
+        assert_eq!(parse_where(str1), Ok(WhereInstruction::JumpTo(10)));
+        assert_eq!(parse_where(str2), Ok(WhereInstruction::Add(10)));
+    }
+
+    #[test]
+    fn parse_what_test() {
+        let str1 = "[WhatDoIDo] Print";
+        let str2 = "[WhatDoIDo] Add 10";
+        assert_eq!(parse_what(str1), Ok(WhatInstruction::Print));
+        assert_eq!(parse_what(str2), Ok(WhatInstruction::Add(10)));
+    }
+
+    #[test]
+    fn parse_instruction_test() {
+        let str1 = "[WhoAmI] Renamed TrueI";
+        let str2 = "[WhatDoIDo] Add 7";
+        let str3 = "[WhereAmI] JumpTo 5";
+        assert_eq!(
+            parse_instruction(str1),
+            Ok(ThreeThoughts::WhoAmI(WhoInstruction::Renamed(
+                "TrueI".to_string()
+            )))
+        );
+        assert_eq!(
+            parse_instruction(str2),
+            Ok(ThreeThoughts::WhatDoIDo(WhatInstruction::Add(7)))
+        );
+        assert_eq!(
+            parse_instruction(str3),
+            Ok(ThreeThoughts::WhereAmI(WhereInstruction::JumpTo(5)))
+        );
+    }
+
+    #[test]
+    fn parse_program_test() {
+        let str0 = "[WhatDoIDo] Note This-is-a-\"Hello-World!\"-of-3Thoughts
+[WhatDoIDo] Add 72
+[WhatDoIDo] Print
+[WhereAmI] Add 1  
+[WhatDoIDo] Add 101
+[WhatDoIDo] Print";
+        assert_eq!(
+            parse_program(str0),
+            Ok(vec![
+                ThreeThoughts::WhatDoIDo(WhatInstruction::Note),
+                ThreeThoughts::WhatDoIDo(WhatInstruction::Add(72)),
+                ThreeThoughts::WhatDoIDo(WhatInstruction::Print),
+                ThreeThoughts::WhereAmI(WhereInstruction::Add(1)),
+                ThreeThoughts::WhatDoIDo(WhatInstruction::Add(101)),
+                ThreeThoughts::WhatDoIDo(WhatInstruction::Print)
+            ])
+        );
+    }
+}
+
+
+--- .\src\lib.rs ---
+pub mod core;
+
+
+--- .\src\main.rs ---
+use anyhow::Result;
+use clap::{Parser, Subcommand};
+
+use std::fs;
+use ts3::core::execute::VM;
+use ts3::core::parser::parse_program;
+
+#[derive(Parser)]
+#[command(version)]
+struct Cli {
+    #[command(subcommand)]
+    command: Commands,
+}
+
+#[derive(Subcommand)]
+enum Commands {
+    Run {
+        file: String,
+
+        #[arg(long, default_value = "65536")]
+        mem: usize,
+    },
+}
+
+fn main() -> Result<()> {
+    let cli = Cli::parse();
+    match cli.command {
+        Commands::Run { file, mem } => {
+            let content = fs::read_to_string(&file)?;
+            let instructions = parse_program(&content)?;
+            let mut vm = VM::new(instructions, mem);
+            vm.run()?;
+        }
+    }
+    Ok(())
+}
+
+

@@ -1,0 +1,9 @@
+[WhatDoIDo] Note === 倒计时 5 到 0 ===
+
+[WhatDoIDo] Add 53
+
+[WhatDoIDo] IfSome 48,6
+[WhatDoIDo] Println
+[WhatDoIDo] Sub 1
+[WhatDoIDo] JumpTo 2
+[WhatDoIDo] Println

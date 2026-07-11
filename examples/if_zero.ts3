@@ -1,0 +1,10 @@
+[WhatDoIDo] Note === IfZero 测试 ===
+
+[WhatDoIDo] Add 40
+[WhatDoIDo] IfZero 6
+[WhatDoIDo] Println
+[WhatDoIDo] Sub 1
+[WhatDoIDo] JumpTo 2
+[WhatDoIDo] Println
+
+[WhatDoIDo] ResetOrigin

@@ -4,9 +4,9 @@ pub struct Memory {
     pub(crate) pointer: usize,
 }
 impl Memory {
-    pub fn new() -> Self {
+    pub fn new(mem: usize) -> Self {
         Memory {
-            cells: vec![0; 65536],
+            cells: vec![0; mem],
             pointer: 0,
         }
     }
@@ -49,7 +49,7 @@ mod tests {
     #[test]
     fn new_test() {
         assert_eq!(
-            Memory::new(),
+            Memory::new(65536),
             Memory {
                 cells: vec![0; 65536],
                 pointer: 0
@@ -59,7 +59,7 @@ mod tests {
 
     #[test]
     fn ward_test() {
-        let mut memory = Memory::new();
+        let mut memory = Memory::new(65536);
         memory.forward(4);
         assert_eq!(memory.pointer, 4);
         memory.backward(2);
@@ -68,14 +68,14 @@ mod tests {
 
     #[test]
     fn jump() {
-        let mut memory = Memory::new();
+        let mut memory = Memory::new(65536);
         memory.jump(10);
         assert_eq!(memory.pointer, 10)
     }
 
     #[test]
     fn current() {
-        let mut memory = Memory::new();
+        let mut memory = Memory::new(65536);
         assert_eq!(memory.current(), 0);
         memory.set_current(10);
         assert_eq!(memory.cells[memory.pointer], 10)
@@ -83,7 +83,7 @@ mod tests {
 
     #[test]
     fn expand_test() {
-        let mut memory = Memory::new();
+        let mut memory = Memory::new(65536);
         for _ in 1..65535 {
             memory.set_current(1);
             memory.forward(1);

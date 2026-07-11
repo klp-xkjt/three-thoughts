@@ -1,0 +1,21 @@
+[WhoAmI] Named Rustacean
+[WhereAmI] Origin
+[WhereAmI] Add 1
+[WhatDoIDo] Add 65
+[WhereAmI] Add 1
+[WhatDoIDo] Add 66
+[WhereAmI] Add 1
+[WhatDoIDo] Add 67
+[WhereAmI] Origin
+[WhatDoIDo] Loop 10, 16, 3
+[WhereAmI] Origin
+[WhatDoIDo] Print
+[WhereAmI] Add 1
+[WhatDoIDo] Print
+[WhereAmI] Add 1
+[WhatDoIDo] Print
+[WhereAmI] Origin
+[WhatDoIDo] IfName Rustacean, 18
+[WhatDoIDo] Println
+[WhatDoIDo] Println
+[WhatDoIDo] Println

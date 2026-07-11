@@ -1,9 +1,10 @@
 use crate::core::error::*;
 use crate::core::instruction::*;
+use crate::core::loop_and_condition::LoopState;
 
 pub fn parse_instruction(ts3: &str) -> Result<ThreeThoughts, ThreeThoughtsError> {
-    let mut lines = ts3.lines();
-    while let Some(line) = lines.next() {
+    let lines = ts3.lines();
+    for line in lines {
         let parts = line.split_whitespace().collect::<Vec<_>>();
         match parts.as_slice() {
             ["[WhoAmI]", ..] => return Ok(ThreeThoughts::WhoAmI(parse_who(line)?)),
@@ -12,13 +13,16 @@ pub fn parse_instruction(ts3: &str) -> Result<ThreeThoughts, ThreeThoughtsError>
             _ => continue,
         }
     }
-    return Err(ThreeThoughtsError::NoInstructions(
+    Err(ThreeThoughtsError::NoInstructions(
         "No matching instruction found".to_string(),
-    ));
+    ))
 }
 
-pub fn get_sub<'a>(str: &'a str, index: usize) -> &'a str {
+pub fn get_sub(str: &str, index: usize) -> &str {
     str.split_whitespace().nth(index).unwrap_or("")
+}
+pub fn get_values(str: &str) -> Vec<&str> {
+    str.split(",").collect::<Vec<&str>>()
 }
 
 pub fn parse_who(str: &str) -> Result<WhoInstruction, ThreeThoughtsError> {
@@ -59,6 +63,16 @@ pub fn parse_what(str: &str) -> Result<WhatInstruction, ThreeThoughtsError> {
     match sub {
         "Print" => Ok(WhatInstruction::Print),
         "Println" => Ok(WhatInstruction::Println),
+        "Loop" => {
+            let sub = get_sub(str, 2);
+            let vals = get_values(sub);
+            let loop_inst = LoopState {
+                start_pc: vals.get(0).and_then(|s| s.parse().ok()).unwrap_or(0),
+                end_pc: vals.get(1).and_then(|s| s.parse().ok()).unwrap_or(0),
+                times: vals.get(2).and_then(|s| s.parse().ok()).unwrap_or(0),
+            };
+            Ok(WhatInstruction::Loop(loop_inst))
+        }
         "Add" => Ok(WhatInstruction::Add(
             get_sub(str, 2).parse::<usize>().unwrap_or(0),
         )),
@@ -67,6 +81,39 @@ pub fn parse_what(str: &str) -> Result<WhatInstruction, ThreeThoughtsError> {
         )),
         "Note" => Ok(WhatInstruction::Note),
         "Reset" => Ok(WhatInstruction::Reset),
+        "ResetOrigin" => Ok(WhatInstruction::ResetOrigin),
+        "IfZero" => Ok(WhatInstruction::IfZero(
+            get_sub(str, 2).parse::<usize>().unwrap_or(0),
+        )),
+        "IfNotZero" => Ok(WhatInstruction::IfNotZero(
+            get_sub(str, 2).parse::<usize>().unwrap_or(0),
+        )),
+        "IfSome" => {
+            let sub = get_sub(str, 2);
+            let vals = get_values(sub);
+            Ok(WhatInstruction::IfSome(
+                vals.get(0).and_then(|s| s.parse().ok()).unwrap_or(0),
+                vals.get(1).and_then(|s| s.parse().ok()).unwrap_or(0),
+            ))
+        }
+        "IfNotSome" => {
+            let sub = get_sub(str, 2);
+            let vals = get_values(sub);
+            Ok(WhatInstruction::IfNotSome(
+                vals.get(0).and_then(|s| s.parse().ok()).unwrap_or(0),
+                vals.get(1).and_then(|s| s.parse().ok()).unwrap_or(0),
+            ))
+        }
+        "IfName" => {
+            let sub = get_sub(str, 2);
+            let vals: Vec<String> = sub.split(',').map(|s| s.to_string()).collect();
+            let name = vals.get(0).cloned().unwrap_or_default();
+            let pc = vals.get(1).and_then(|s| s.parse().ok()).unwrap_or(0);
+            Ok(WhatInstruction::IfName(name, pc))
+        }
+        "JumpTo" => Ok(WhatInstruction::JumpTo(
+            get_sub(str, 2).parse::<usize>().unwrap_or(0),
+        )),
         _ => Err(ThreeThoughtsError::NoInstructions(format!(
             "No instructions of WhatDoIDo: {}",
             sub
@@ -148,6 +195,27 @@ mod tests {
         assert_eq!(
             parse_instruction(str3),
             Ok(ThreeThoughts::WhereAmI(WhereInstruction::JumpTo(5)))
+        );
+    }
+
+    #[test]
+    fn parse_program_test() {
+        let str0 = "[WhatDoIDo] Note This-is-a-\"Hello-World!\"-of-3Thoughts
+[WhatDoIDo] Add 72
+[WhatDoIDo] Print
+[WhereAmI] Add 1  
+[WhatDoIDo] Add 101
+[WhatDoIDo] Print";
+        assert_eq!(
+            parse_program(str0),
+            Ok(vec![
+                ThreeThoughts::WhatDoIDo(WhatInstruction::Note),
+                ThreeThoughts::WhatDoIDo(WhatInstruction::Add(72)),
+                ThreeThoughts::WhatDoIDo(WhatInstruction::Print),
+                ThreeThoughts::WhereAmI(WhereInstruction::Add(1)),
+                ThreeThoughts::WhatDoIDo(WhatInstruction::Add(101)),
+                ThreeThoughts::WhatDoIDo(WhatInstruction::Print)
+            ])
         );
     }
 }
