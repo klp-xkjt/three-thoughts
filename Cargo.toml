@@ -1,5 +1,5 @@
 [package]
-name = "ts3"
+name = "threethoughts"
 version = "0.1.0"
 edition = "2024"
 description = "用哲学三问来进行编写代码"
@@ -14,5 +14,5 @@ clap = { version = "4.6.1", features = ["derive"] }
 thiserror = "2.0.18"
 
 [[bin]]
-name = "ts3"
+name = "three-thoughts"
 path = "src/main.rs"

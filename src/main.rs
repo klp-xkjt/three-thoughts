@@ -2,8 +2,8 @@ use anyhow::Result;
 use clap::{Parser, Subcommand};
 
 use std::fs;
-use ts3::core::execute::VM;
-use ts3::core::parser::parse_program;
+use threethoughts::core::execute::VM;
+use threethoughts::core::parser::parse_program;
 
 #[derive(Parser)]
 #[command(version)]
