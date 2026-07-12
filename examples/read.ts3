@@ -1,0 +1,154 @@
+// ============================================================
+// 输入系统测试 — 演示 Read / ReadASCII
+//
+// 用法: cargo run -- run examples/read.ts3
+// 然后依次输入:
+//   第一行: 随便一个字符 (如 A)
+//   第二行: 随便一个字符 (如 B)
+//   第三行: 一个十进制 ASCII 码 (如 33 表示 '!')
+// ============================================================
+
+[WhatDoIDo] Note ===== Step 1: Read 原始字节 1 =====
+// PC 0
+
+[WhatDoIDo] Read 0
+// PC 1: 从 stdin 读 1 字节 → cell[0]
+[WhatDoIDo] Read 9
+// PC 2: 再读 1 字节吞掉行尾 \n（扔进 cell[9]，不影响程序）
+[WhereAmI] Origin
+// PC 3: ptr = 0
+[WhatDoIDo] Print
+// PC 4: 回显该字节的字符
+[WhereAmI] Add 1
+// PC 5: ptr = 1
+[WhatDoIDo] Add 10
+// PC 6: cell[1] = 10 = '\n'
+[WhatDoIDo] Print
+// PC 7: 换行
+
+
+[WhatDoIDo] Note ===== Step 2: Read 原始字节 2 =====
+// PC 8
+
+[WhereAmI] Origin
+// PC 9: ptr = 0
+[WhatDoIDo] Read 1
+// PC 10: 从 stdin 读 1 字节 → cell[1]
+[WhatDoIDo] Read 9
+// PC 11: 吞掉行尾 \n
+[WhereAmI] Add 1
+// PC 12: ptr = 1
+[WhatDoIDo] Print
+// PC 13: 回显
+[WhereAmI] Add 1
+// PC 14: ptr = 2
+[WhatDoIDo] Add 10
+// PC 15: cell[2] = '\n'
+[WhatDoIDo] Print
+// PC 16: 换行
+
+
+[WhatDoIDo] Note ===== Step 3: ReadASCII 十进制 ASCII 码 =====
+// PC 17
+
+[WhereAmI] Origin
+// PC 18: ptr = 0
+[WhatDoIDo] ReadASCII 2
+// PC 19: 读十进制数 → ASCII 字符 → cell[2]
+//        例如输入 "65" → cell[2] = 65 = 'A'
+//        ReadASCII 自动跳过前导 \n，不需要手动吞
+
+[WhereAmI] JumpTo 2
+// PC 20: ptr 直接跳到 cell[2]
+[WhatDoIDo] Print
+// PC 21: 打印该 ASCII 码对应的字符
+[WhereAmI] Add 1
+// PC 22: ptr = 3
+[WhatDoIDo] Add 10
+// PC 23: cell[3] = '\n'
+[WhatDoIDo] Print
+// PC 24: 换行
+
+
+[WhatDoIDo] Note ===== Step 4: 条件判断 — 输入是否有效 =====
+// PC 25
+
+[WhereAmI] JumpTo 2
+// PC 26: ptr = 2，检查 cell[2]
+[WhatDoIDo] IfNotZero 30
+// PC 27: cell[2] != 0（有有效输入）→ 跳到 PC 30（继续）
+//        如果没输入或输入 "0"，cell[2] == 0 → 走到 Panic
+
+[WhatDoIDo] Panic No valid ASCII code entered!
+// PC 28: 输入无效时终止
+
+[WhatDoIDo] Note
+// PC 29: 占位
+
+
+[WhatDoIDo] Note ===== Step 5: 打印分隔线 "---" =====
+// PC 30
+
+[WhereAmI] Origin
+// PC 31: ptr = 0
+[WhatDoIDo] Reset
+// PC 32: 清空 cell，避免残留值干扰 Add
+[WhatDoIDo] Add 45
+// PC 33: cell[0] = 45 = '-'
+
+[WhatDoIDo] Loop 35,37,3
+// PC 34: 循环 3 次，循环体 PC 35~37
+
+[WhatDoIDo] Print
+// PC 35: [循环体] 打印 '-' → "---"
+[WhereAmI] Keep
+// PC 36: [循环体] ptr 不动（演示 Keep）
+[WhatDoIDo] Note
+// PC 37: [循环体结束]
+
+[WhereAmI] Add 1
+// PC 38: ptr = 1
+[WhatDoIDo] Add 10
+// PC 39: cell[1] = '\n'
+[WhatDoIDo] Print
+// PC 40: 换行
+
+
+[WhatDoIDo] Note ===== Step 6: IfNotSome 检查 + 结束 =====
+// PC 41
+
+[WhereAmI] Origin
+// PC 42: ptr = 0
+[WhatDoIDo] IfNotSome 45,48
+// PC 43: 如果 cell[0] != 45 ('-') → 跳到 PC 48 (Panic)
+//        如果 cell[0] == 45 → 继续往下（正常路径）
+
+[WhereAmI] JumpTo 4
+// PC 44: ptr = 4（干净 cell）
+[WhatDoIDo] Add 33
+// PC 45: cell[4] = 33 = '!'
+[WhatDoIDo] Println
+// PC 46: 打印 "!\n"
+
+[WhatDoIDo] JumpTo 49
+// PC 47: 跳过 PC 48 的 Panic → 正常退出
+
+[WhatDoIDo] Panic Separator corrupted!
+// PC 48: （仅 IfNotSome 跳转至此 — cell[0] 不是 '-'）
+
+[WhatDoIDo] Note
+// PC 49: 程序结束
+
+
+// ════════════════════════════════════════════════════════
+// 本示例使用的指令（17/22）:
+//
+// WhereAmI(5):  Origin, Add, JumpTo, Keep
+// WhatDoIDo(12): Add, Print, Println, Note, Loop,
+//                Read, ReadASCII, Reset,
+//                IfNotZero, IfNotSome, JumpTo, Panic
+//
+// 未展示（5）:
+//   Named, Renamed, Sub(WhereAmI), Sub(WhatDoIDo)
+//   IfZero, IfSome, IfName, ResetOrigin
+// ════════════════════════════════════════════════════════

@@ -25,17 +25,27 @@ pub enum WhereInstruction {
 #[derive(Debug, PartialEq, Clone)]
 pub enum WhatInstruction {
     Add(usize), // 单元格值增加一定值
+    AddOther(usize, usize),
+    SubOther(usize, usize),
     Sub(usize), // 单元格值减少一定值
+    Free,
+    FreeOther(usize),
     Loop(LoopState),
-    Print,                 // 输出当前单元格的值（不换行）
-    Println,               // 输出当前单元格的值（换行）
-    Note,                  // 注释
-    Reset,                 // 重置
-    ResetOrigin,           // 重置并使指针回到初始单元格
-    IfZero(usize),         // 如果当前单元格是 0，跳转到 PC
-    IfNotZero(usize),      // 如果当前单元格不是 0，跳转
-    IfSome(usize, usize),  // 如果当前单元格是某一数值，跳转
-    IfNotSome(usize, usize), 
-    IfName(String, usize), // 如果名字匹配，跳转
-    JumpTo(usize),         // 直接跳转 PC
+    Print,                   // 输出当前单元格的值（不换行）
+    Println,                 // 输出当前单元格的值（换行）
+    Note,                    // 注释
+    Reset,                   // 重置
+    ResetOrigin,             // 重置并使指针回到初始单元格
+    IfZero(usize),           // 如果当前单元格是 0，跳转到 PC
+    IfNotZero(usize),        // 如果当前单元格不是 0，跳转
+    IfSome(usize, usize),    // 如果当前单元格是某一数值，跳转
+    IfNotSome(usize, usize), // 如果当前单元格不是某一数值，跳转
+    IfName(String, usize),   // 如果名字匹配，跳转
+    JumpTo(usize),           // 直接跳转 PC
+    Panic(String),           // 强行使程序 Panic,
+    Read(usize),             // 读取单个字节于某一地址
+    ReadASCII(usize),
+    Dump(usize, usize),
+    Reverse(usize, usize),
+    GetOther(usize),
 }

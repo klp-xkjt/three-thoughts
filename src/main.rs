@@ -19,16 +19,19 @@ enum Commands {
 
         #[arg(long, default_value = "65536")]
         mem: usize,
+
+        #[arg(long, default_value = "false")]
+        debug: bool,
     },
 }
 
 fn main() -> Result<()> {
     let cli = Cli::parse();
     match cli.command {
-        Commands::Run { file, mem } => {
+        Commands::Run { file, mem, debug } => {
             let content = fs::read_to_string(&file)?;
             let instructions = parse_program(&content)?;
-            let mut vm = VM::new(instructions, mem);
+            let mut vm = VM::new(instructions, mem, debug);
             vm.run()?;
         }
     }

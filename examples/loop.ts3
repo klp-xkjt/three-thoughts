@@ -1,13 +1,6 @@
-[WhatDoIDo] Note === Loop Test: Print ABC 6 times ===
-[WhereAmI] Add 1
-[WhatDoIDo] Add 65
-[WhatDoIDo] Print
-[WhereAmI] Add 1
-[WhatDoIDo] Add 66
-[WhatDoIDo] Print
-[WhereAmI] Add 1
-[WhatDoIDo] Add 67
-[WhatDoIDo] Println
-[WhatDoIDo] ResetOrigin
-[WhatDoIDo] Loop 0,11,6
-[WhatDoIDo] Println
+[WhatDoIDo] Note === 打印 0 到 2 ===
+[WhatDoIDo] Add 48        // PC 1: 初始化为 ASCII '0'
+[WhatDoIDo] Loop 3,5,3    // PC 2: 循环头（3次）
+[WhatDoIDo] Println       // PC 3: 循环体开始 (start_pc=3)
+[WhatDoIDo] Add 1         // PC 4: 加1
+[WhatDoIDo] Note          // PC 5: 循环体结束 (end_pc=5)

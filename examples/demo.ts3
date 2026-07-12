@@ -1,0 +1,137 @@
+[WhatDoIDo] Note ===== 3Thoughts Demo =====
+// PC 0: 程序标题（注释，不执行任何操作）
+
+[WhatDoIDo] Reset
+// PC 1: 清零所有内存单元，ptr 归 0
+
+// ═══════════════════════════════════════════════
+// Section 1: 用 Loop 打印 "LOOP:" 五个字符
+// 策略：将 5 个 ASCII 码存入 cell[0]~cell[4]，
+//       然后用 Loop 遍历打印
+// ═══════════════════════════════════════════════
+
+[WhatDoIDo] Add 76
+// PC 2:  cell[0] = 76  = 'L'
+[WhereAmI] Add 1
+// PC 3:  ptr = 1
+[WhatDoIDo] Add 79
+// PC 4:  cell[1] = 79  = 'O'
+[WhereAmI] Add 1
+// PC 5:  ptr = 2
+[WhatDoIDo] Add 79
+// PC 6:  cell[2] = 79  = 'O'
+[WhereAmI] Add 1
+// PC 7:  ptr = 3
+[WhatDoIDo] Add 80
+// PC 8:  cell[3] = 80  = 'P'
+[WhereAmI] Add 1
+// PC 9:  ptr = 4
+[WhatDoIDo] Add 58
+// PC 10: cell[4] = 58  = ':'
+[WhereAmI] Origin
+// PC 11: ptr 回到 0（准备从头遍历打印）
+
+[WhatDoIDo] Loop 13,15,5
+// PC 12: 循环 5 次，循环体 = PC 13~15
+//        首次：压栈 {start:13, end:15, times:5, loop_pc:12} → 跳到 PC 13
+//        后续：times 递减，归零时弹出栈 → 跳到 PC 15+1=16
+
+[WhatDoIDo] Print
+// PC 13: [循环体] 打印当前单元格字符（as char）
+
+[WhereAmI] Add 1
+// PC 14: [循环体] ptr++，移到下一个字符
+
+[WhatDoIDo] Note
+// PC 15: [循环体结束] 空操作，仅标记循环尾
+//        执行后 PC→16 > end_pc(15)，run() 检测到越界 → 跳回 loop_pc(12)
+
+[WhereAmI] Add 1
+// PC 16: ptr = 5（跳到干净单元格，避开已用数据）
+[WhatDoIDo] Add 10
+// PC 17: cell[5] = 10 = '\n'（换行符）
+[WhatDoIDo] Print
+// PC 18: 打印换行符 → 输出 "LOOP:\n"
+
+// ═══════════════════════════════════════════════
+// Section 2: 用 Loop 打印 "ABC" 三个字符
+// 策略：从 'A'(65) 开始，每次循环打印后 +1
+// ═══════════════════════════════════════════════
+
+[WhereAmI] Origin
+// PC 19: ptr 回到 0
+[WhatDoIDo] Reset
+// PC 20: 清零所有内存（避免 Section 1 的残留值干扰）
+[WhatDoIDo] Add 65
+// PC 21: cell[0] = 65 = 'A'
+
+[WhatDoIDo] Loop 23,25,3
+// PC 22: 循环 3 次，循环体 = PC 23~25
+
+[WhatDoIDo] Print
+// PC 23: [循环体] 打印当前字符 → 'A' → 'B' → 'C'
+[WhatDoIDo] Add 1
+// PC 24: [循环体] cell[0] += 1（'A'→'B'→'C'→'D'）
+[WhatDoIDo] Note
+// PC 25: [循环体结束] PC→26 > end_pc(25) → 跳回 loop_pc(22)
+
+[WhereAmI] Add 1
+// PC 26: ptr = 1（干净单元格）
+[WhatDoIDo] Add 10
+// PC 27: cell[1] = 10 = '\n'
+[WhatDoIDo] Print
+// PC 28: 打印换行符 → 输出 "ABC\n"
+
+// ═══════════════════════════════════════════════
+// Section 3: 倒计时 3→2→1→0  +  条件判断打印 "!"
+// 策略：从 '3'(51) 开始，逐次 -1 并打印，
+//       打印完 '0' 后用 IfSome 检测并跳到 Done
+// ═══════════════════════════════════════════════
+
+[WhereAmI] Origin
+// PC 29: ptr 回到 0
+[WhatDoIDo] Reset
+// PC 30: 清零所有内存
+[WhatDoIDo] Add 51
+// PC 31: cell[0] = 51 = '3'
+
+[WhatDoIDo] Println
+// PC 32: 打印 '3' + 换行 → "3\n"
+[WhatDoIDo] Sub 1
+// PC 33: cell[0] = 50 = '2'
+[WhatDoIDo] Println
+// PC 34: 打印 '2' + 换行 → "2\n"
+[WhatDoIDo] Sub 1
+// PC 35: cell[0] = 49 = '1'
+[WhatDoIDo] Println
+// PC 36: 打印 '1' + 换行 → "1\n"
+[WhatDoIDo] Sub 1
+// PC 37: cell[0] = 48 = '0'
+[WhatDoIDo] Println
+// PC 38: 打印 '0' + 换行 → "0\n"
+
+[WhatDoIDo] IfSome 48,42
+// PC 39: 如果 cell[0] == 48 ('0') → 跳到 PC 42（Done 分支）
+//        条件成立！跳转到 PC 42
+
+[WhatDoIDo] JumpTo 48
+// PC 40: 无条件跳转到结束（兜底逻辑，正常情况不会执行到此处）
+
+[WhatDoIDo] Note
+// PC 41: 占位（IfSome 跳转目标原本指向此处之前的 PC 42）
+
+// ── Done! 分支：打印 "!\n" ──
+
+[WhereAmI] Add 1
+// PC 42: ptr = 1（干净单元格，cell[1]=0）
+[WhatDoIDo] Add 33
+// PC 43: cell[1] = 33 = '!'
+[WhatDoIDo] Print
+// PC 44: 打印 '!'
+[WhereAmI] Add 1
+// PC 45: ptr = 2
+[WhatDoIDo] Add 10
+// PC 46: cell[2] = 10 = '\n'
+[WhatDoIDo] Print
+// PC 47: 打印换行符 → 输出 "!\n"
+//         程序结束（PC 48 >= 48 条指令，run() 退出）

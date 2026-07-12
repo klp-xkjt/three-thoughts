@@ -1,0 +1,137 @@
+// ============================================================
+// 3Thoughts 综合示例 — 覆盖大部分指令
+//
+// 输出: HI \n 3 \n 2 \n 1 \n ! \n
+// ============================================================
+
+[WhatDoIDo] Note ===== Section 1: 身份与问候 =====
+// PC 0
+
+[WhoAmI] Named TS3
+// PC 1: VM 名称为 "TS3"
+
+// --- 在 cell[0] 和 cell[1] 存入 "HI" ---
+[WhatDoIDo] Add 72
+// PC 2:  cell[0] = 72 = 'H'
+[WhereAmI] Add 1
+// PC 3:  ptr = 1
+[WhatDoIDo] Add 73
+// PC 4:  cell[1] = 73 = 'I'
+[WhereAmI] Origin
+// PC 5:  ptr = 0，准备循环打印
+
+[WhatDoIDo] Loop 7,9,2
+// PC 6:  循环 2 次，循环体 PC 7~9
+//        首次: 压栈 {start:7, end:9, times:2, loop_pc:6} → 跳到 PC 7
+//        每次迭代结束: PC>9 → 跳回 loop_pc(6)，times--
+//        times=0: 弹出栈 → pc=end_pc(9)，run() +1 → PC 10
+
+[WhatDoIDo] Print
+// PC 7:  [循环体] 打印当前 cell → 'H' → 'I'
+[WhereAmI] Add 1
+// PC 8:  [循环体] ptr++，移到下一个字符
+[WhatDoIDo] Note
+// PC 9:  [循环体结束] PC→10 > end_pc(9) → 跳回 loop_pc(6)
+
+// --- 换行分隔 ---
+[WhereAmI] Add 1
+// PC 10: ptr = 2（干净 cell）
+[WhatDoIDo] Add 10
+// PC 11: cell[2] = 10 = '\n'
+[WhatDoIDo] Println
+// PC 12: 打印 '\n' + 换行（等价于空行）
+
+
+[WhatDoIDo] Note ===== Section 2: 条件分支 =====
+// PC 13
+
+[WhereAmI] Origin
+// PC 14: ptr 回到 0
+[WhatDoIDo] Reset
+// PC 15: 清空所有 cell
+
+[WhatDoIDo] IfName TS3,18
+// PC 16: name == "TS3" → 跳到 PC 18（继续执行）
+//        条件成立 — PC 1 已命名为 TS3
+
+[WhatDoIDo] Panic Identity lost!
+// PC 17: （被跳过）仅 name 不匹配时触发
+
+
+[WhatDoIDo] Note ===== Section 3: 倒计时 3-2-1 =====
+// PC 18
+
+[WhatDoIDo] Add 3
+// PC 19: cell[0] = 3（数值，非 ASCII）
+
+// ==== While 循环: cell[0] != 0 时重复 ====
+[WhatDoIDo] Note
+// PC 20: LOOP_START — 循环入口
+
+[WhatDoIDo] IfZero 33
+// PC 21: cell[0] == 0 → 跳到 PC 33（退出循环）
+//        否则继续往下
+
+// --- 循环体: 数字→ASCII→打印→恢复→换行 ---
+[WhatDoIDo] Add 48
+// PC 22: 数值→ASCII: 3→'3'(51), 2→'2'(50), 1→'1'(49)
+[WhatDoIDo] Print
+// PC 23: 打印数字字符
+[WhatDoIDo] Sub 48
+// PC 24: ASCII→数值: 恢复为 3,2,1
+[WhereAmI] Add 1
+// PC 25: ptr = 1
+[WhatDoIDo] Add 10
+// PC 26: cell[1] += 10 → 10 = '\n'（第一次为 0+10，后续先 Sub 10 清零再加）
+[WhatDoIDo] Print
+// PC 27: 打印 '\n'
+[WhatDoIDo] Sub 10
+// PC 28: cell[1] -= 10 → 归零，避免下次迭代累加
+[WhereAmI] Origin
+// PC 29: ptr 回到 0
+[WhatDoIDo] Sub 1
+// PC 30: cell[0] -= 1（3→2→1→0）
+
+[WhatDoIDo] JumpTo 20
+// PC 31: 无条件跳回 LOOP_START（PC 20）
+
+[WhatDoIDo] Note
+// PC 32: （跳转越过了这里）
+
+
+[WhatDoIDo] Note ===== Section 4: 结束 =====
+// PC 33: 循环出口 — cell[0] == 0 时跳到这里
+
+[WhatDoIDo] ResetOrigin
+// PC 34: 清空所有 cell + ptr 归零
+
+[WhereAmI] Add 1
+// PC 35: ptr = 1
+[WhatDoIDo] Add 33
+// PC 36: cell[1] = 33 = '!'
+[WhatDoIDo] Print
+// PC 37: 打印 '!'
+
+[WhereAmI] Add 1
+// PC 38: ptr = 2
+[WhatDoIDo] Add 10
+// PC 39: cell[2] = 10 = '\n'
+[WhatDoIDo] Print
+// PC 40: 打印 '\n'
+//         程序结束（PC 41 >= 41 条指令，run() 退出）
+
+
+// ════════════════════════════════════════════════════════
+// 本示例使用的指令（15/22）:
+//
+// WhoAmI(1):  Named
+// WhereAmI(2): Origin, Add
+// WhatDoIDo(12): Add, Sub, Loop, Print, Println, Note,
+//                Reset, ResetOrigin, IfZero, JumpTo,
+//                IfName, Panic
+//
+// 未展示（7）:
+//   Renamed, Keep, JumpTo, Sub(WhereAmI)
+//   IfNotZero, IfSome, IfNotSome
+//   Read, ReadASCII（需要 stdin 交互）
+// ════════════════════════════════════════════════════════

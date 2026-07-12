@@ -1,21 +1,56 @@
 [WhoAmI] Named Rustacean
+// PC 0: 设置 VM 名称为 "Rustacean"
+
 [WhereAmI] Origin
+// PC 1: ptr = 0
+
 [WhereAmI] Add 1
+// PC 2: ptr = 1
 [WhatDoIDo] Add 65
+// PC 3: cell[1] = 65 = 'A'
 [WhereAmI] Add 1
+// PC 4: ptr = 2
 [WhatDoIDo] Add 66
+// PC 5: cell[2] = 66 = 'B'
 [WhereAmI] Add 1
+// PC 6: ptr = 3
 [WhatDoIDo] Add 67
+// PC 7: cell[3] = 67 = 'C'
+
 [WhereAmI] Origin
-[WhatDoIDo] Loop 10, 16, 3
+// PC 8: ptr 回到 0，准备循环
+
+[WhatDoIDo] Loop 10,17,3
+// PC 9: 循环 3 次，循环体 = PC 10~17
+//       打印 cell[0]~[3] → NUL + A + B + C（重复 3 次）
+
 [WhereAmI] Origin
+// PC 10: [循环体] ptr = 0
 [WhatDoIDo] Print
+// PC 11: [循环体] 打印 cell[0]（NUL，不可见）
 [WhereAmI] Add 1
+// PC 12: [循环体] ptr = 1
 [WhatDoIDo] Print
+// PC 13: [循环体] 打印 cell[1] = 'A'
 [WhereAmI] Add 1
+// PC 14: [循环体] ptr = 2
 [WhatDoIDo] Print
+// PC 15: [循环体] 打印 cell[2] = 'B'
+[WhereAmI] Add 1
+// PC 16: [循环体] ptr = 3（修复：原文件缺少此行，导致最后两个 Print 重复打印同一 cell）
+[WhatDoIDo] Print
+// PC 17: [循环体] 打印 cell[3] = 'C'
+//         执行后 PC→18 > end_pc(17) → 跳回 loop_pc(9)
+
 [WhereAmI] Origin
-[WhatDoIDo] IfName Rustacean, 18
+// PC 18: ptr 回到 0
+
+[WhatDoIDo] IfName Rustacean,21
+// PC 19: 如果 name == "Rustacean" → 跳到 PC 21
+//        条件成立（PC 0 设置了 Rustacean）→ 跳过 PC 20
+
 [WhatDoIDo] Println
+// PC 20: （被跳过）仅 name 不匹配时才执行
+
 [WhatDoIDo] Println
-[WhatDoIDo] Println
+// PC 21: 换行，程序结束

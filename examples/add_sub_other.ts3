@@ -1,0 +1,85 @@
+// ============================================================
+// 演示 AddOther / SubOther / GetOther
+//
+// AddOther addr,n : cell[addr] += n（直接操作目标 cell，不经过 ptr）
+// SubOther addr,n : cell[addr] -= n
+// GetOther addr   : cell[ptr] = cell[addr]（从别的 cell 抄到当前）
+// ============================================================
+
+[WhatDoIDo] Note ===== Step 1: cell[0]='A'(65), cell[1]='A'(65) =====
+// PC 0
+
+[WhereAmI] Origin
+// PC 1: ptr = 0
+[WhatDoIDo] Add 65
+// PC 2: cell[0] = 65 = 'A'
+
+[WhereAmI] Add 1
+// PC 3: ptr = 1
+[WhatDoIDo] Add 65
+// PC 4: cell[1] = 65 = 'A'
+
+
+[WhatDoIDo] Note ===== Step 2: AddOther/SubOther 直接改目标 cell =====
+// PC 5
+
+[WhatDoIDo] AddOther 0,1
+// PC 6: cell[0] += 1 → 66 = 'B'（ptr 在 1，不影响结果）
+[WhatDoIDo] AddOther 1,2
+// PC 7: cell[1] += 2 → 67 = 'C'（ptr 在 1，不影响结果）
+
+
+[WhatDoIDo] Note ===== Step 3: 打印 cells 0~1 → "BC" =====
+// PC 8
+
+[WhereAmI] Origin
+// PC 9: ptr = 0
+[WhatDoIDo] Loop 11,13,2
+// PC 10: 循环 2 次，循环体 PC 11~13
+
+[WhatDoIDo] Print
+// PC 11: [循环体] 打印 → B C
+[WhereAmI] Add 1
+// PC 12: [循环体] ptr++
+[WhatDoIDo] Note
+// PC 13: [循环体结束]
+
+// --- 换行 ---
+[WhereAmI] Add 1
+// PC 14: ptr = 2（干净 cell）
+[WhatDoIDo] Add 10
+// PC 15: cell[2] = '\n'
+[WhatDoIDo] Print
+// PC 16: 换行
+//        输出至此: "BC\n"
+
+
+[WhatDoIDo] Note ===== Step 4: GetOther 从 cell[0] 抄值到当前 cell =====
+// PC 17
+
+[WhereAmI] JumpTo 3
+// PC 18: ptr = 3（一个空 cell）
+[WhatDoIDo] GetOther 0
+// PC 19: cell[3] = cell[0] = 66 = 'B'（ptr 在 3，从 cell[0] 抄过来）
+[WhatDoIDo] Print
+// PC 20: 打印 → B
+
+
+[WhatDoIDo] Note ===== Step 5: SubOther 演示 =====
+// PC 21
+
+[WhatDoIDo] SubOther 0,1
+// PC 22: cell[0] -= 1 → 65 = 'A'（ptr 在 3，直接改 cell[0]）
+[WhereAmI] Origin
+// PC 23: ptr = 0
+[WhatDoIDo] Print
+// PC 24: 打印 → A
+
+// --- 换行 ---
+[WhereAmI] JumpTo 5
+// PC 25: ptr = 5（干净 cell，避免覆盖 cell[1] 的 'C'）
+[WhatDoIDo] Add 10
+// PC 26: cell[5] = '\n'
+[WhatDoIDo] Print
+// PC 27: 换行
+//        最终输出: "BC\nBA\n"

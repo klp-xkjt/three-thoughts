@@ -3,4 +3,5 @@ pub struct LoopState {
     pub start_pc: usize,
     pub end_pc: usize,
     pub times: usize,
+    pub loop_pc: usize,
 }

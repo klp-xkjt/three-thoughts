@@ -1,0 +1,101 @@
+// ============================================================
+// Playground — 演示 Reverse / Dump
+//
+// 在 cells[0..5] 存入 "HELLO"，打印 → Reverse → 再打印
+// ============================================================
+
+[WhatDoIDo] Note ===== Step 1: 在 cells 0~4 存入 "HELLO" =====
+// PC 0
+
+[WhatDoIDo] Add 72
+// PC 1:  cell[0] = 72 = 'H'
+[WhereAmI] Add 1
+// PC 2:  ptr = 1
+[WhatDoIDo] Add 69
+// PC 3:  cell[1] = 69 = 'E'
+[WhereAmI] Add 1
+// PC 4:  ptr = 2
+[WhatDoIDo] Add 76
+// PC 5:  cell[2] = 76 = 'L'
+[WhereAmI] Add 1
+// PC 6:  ptr = 3
+[WhatDoIDo] Add 76
+// PC 7:  cell[3] = 76 = 'L'
+[WhereAmI] Add 1
+// PC 8:  ptr = 4
+[WhatDoIDo] Add 79
+// PC 9:  cell[4] = 79 = 'O'
+
+// --- 在远处存换行符，避免被 Reverse 影响 ---
+[WhereAmI] JumpTo 20
+// PC 10: ptr = 20
+[WhatDoIDo] Add 10
+// PC 11: cell[20] = 10 = '\n'
+
+
+[WhatDoIDo] Note ===== Step 2: Dump 原始内存 =====
+// PC 12
+
+[WhatDoIDo] Dump 0,5
+// PC 13: 输出 "0:72 1:69 2:76 3:76 4:79"
+//        （调试信息，显示每个 cell 的值）
+
+
+[WhatDoIDo] Note ===== Step 3: 打印原始 "HELLO" =====
+// PC 14
+
+[WhereAmI] Origin
+// PC 15: ptr = 0
+[WhatDoIDo] Loop 17,19,5
+// PC 16: 循环 5 次，循环体 PC 17~19
+
+[WhatDoIDo] Print
+// PC 17: [循环体] 打印 → H E L L O
+[WhereAmI] Add 1
+// PC 18: [循环体] ptr++
+[WhatDoIDo] Note
+// PC 19: [循环体结束] PC→20 > 19 → 跳回 loop_pc(16)
+
+// --- 换行 ---
+[WhereAmI] JumpTo 20
+// PC 20: ptr = 20
+[WhatDoIDo] Print
+// PC 21: 打印 '\n'
+
+
+[WhatDoIDo] Note ===== Step 4: Reverse! =====
+// PC 22
+
+[WhatDoIDo] Reverse 0,5
+// PC 23: 反转 cells[0..5] → 原地变成 O L L E H
+//        [79,76,76,69,72] = "OLLEH"
+
+
+[WhatDoIDo] Note ===== Step 5: Dump 反转后内存 =====
+// PC 24
+
+[WhatDoIDo] Dump 0,5
+// PC 25: 输出 "0:79 1:76 2:76 3:69 4:72"
+
+
+[WhatDoIDo] Note ===== Step 6: 打印反转后的 "OLLEH" =====
+// PC 26
+
+[WhereAmI] Origin
+// PC 27: ptr = 0
+[WhatDoIDo] Loop 29,31,5
+// PC 28: 循环 5 次，循环体 PC 29~31
+
+[WhatDoIDo] Print
+// PC 29: [循环体] 打印 → O L L E H
+[WhereAmI] Add 1
+// PC 30: [循环体] ptr++
+[WhatDoIDo] Note
+// PC 31: [循环体结束]
+
+// --- 换行 ---
+[WhereAmI] JumpTo 20
+// PC 32: ptr = 20
+[WhatDoIDo] Println
+// PC 33: 打印 '\n' + 换行
+//         程序结束
