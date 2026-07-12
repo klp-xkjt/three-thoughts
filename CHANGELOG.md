@@ -30,20 +30,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CLI：`cargo run -- run <file>`，支持 `--mem` 和 `--debug`
 - 示例程序：hello_world、loop、condition、if_zero、demo、overview、read、playground、fibonacci、add_sub_other
 
-### Fixed
-
-- Loop 终止时未跳出循环体（`execute.rs`：缺 `self.pc = l.end_pc`）
-- 解析器不支持逗号后空格（新增 `get_rest` 合并 token）
-- 行内 `//` 注释与逗号参数解析冲突
-- `SubOther` 解析为 `AddOther`（copy-paste 遗留）
-- `AddOther`/`SubOther` 读 `pointer` 而非目标 `addr`（语义修正）
-- `Read`/`ReadASCII` 缓冲区残留 `\n` 干扰下一次输入
-
-### Changed
-
-- 错误类型从单一 `NoInstructions(String)` 扩展为 17 种结构化错误
-- `parse_pair` 闭包统一 IfSome/IfNotSome/Dump/Reverse/AddOther 的双参数解析
-- `VM::new` 增加 `debug` 参数
 
 ## 版本标记说明
 
