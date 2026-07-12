@@ -9,7 +9,7 @@
 ### 使用 `cargo install` 安装
 
 ```
-cargo install ts3
+cargo install threethoughts
 ```
 
 ### 编译项目并安装
@@ -23,13 +23,13 @@ cargo build --release
 
 ```bash
 # 运行 .ts3 文件
-cargo run -- run examples/hello_world.ts3
+three-thoughts run examples/hello_world.ts3
 
 # 指定内存大小（默认 65536 字节）
-cargo run -- run examples/demo.ts3 --mem 1024
+three-thoughts run examples/demo.ts3 --mem 1024
 
 # 开启调试模式，逐条打印指令执行过程
-cargo run -- run examples/loop.ts3 --debug
+three-thoughts run examples/loop.ts3 --debug
 ```
 
 ## 语言设计
