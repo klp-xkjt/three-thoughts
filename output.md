@@ -3,8 +3,8 @@
 ## 📊 统计信息
 
 - **扫描总数**: 34
-- **包含文件**: 20
-- **排除总数**: 14
+- **包含文件**: 23
+- **排除总数**: 11
 
 ---
 
@@ -12,24 +12,27 @@
 
 1. [.gitignore](#file-0)
 2. [License](#file-1)
-3. [examples\condition.ts3](#file-2)
-4. [examples\demo.ts3](#file-3)
-5. [examples\hello_world.ts3](#file-4)
-6. [examples\if_zero.ts3](#file-5)
-7. [examples\loop.ts3](#file-6)
-8. [examples\overview.ts3](#file-7)
-9. [examples\panic.ts3](#file-8)
-10. [examples\read.ts3](#file-9)
-11. [examples\ts3.ts3](#file-10)
-12. [src\core\error.rs](#file-11)
-13. [src\core\execute.rs](#file-12)
-14. [src\core\instruction.rs](#file-13)
-15. [src\core\loop_and_condition.rs](#file-14)
-16. [src\core\memory.rs](#file-15)
-17. [src\core\mod.rs](#file-16)
-18. [src\core\parser.rs](#file-17)
-19. [src\lib.rs](#file-18)
-20. [src\main.rs](#file-19)
+3. [examples\add_sub_other.ts3](#file-2)
+4. [examples\condition.ts3](#file-3)
+5. [examples\demo.ts3](#file-4)
+6. [examples\fibonacci.ts3](#file-5)
+7. [examples\hello_world.ts3](#file-6)
+8. [examples\if_zero.ts3](#file-7)
+9. [examples\loop.ts3](#file-8)
+10. [examples\overview.ts3](#file-9)
+11. [examples\panic.ts3](#file-10)
+12. [examples\read.ts3](#file-11)
+13. [examples\reverse.ts3](#file-12)
+14. [examples\ts3.ts3](#file-13)
+15. [src\core\error.rs](#file-14)
+16. [src\core\execute.rs](#file-15)
+17. [src\core\instruction.rs](#file-16)
+18. [src\core\loop_and_condition.rs](#file-17)
+19. [src\core\memory.rs](#file-18)
+20. [src\core\mod.rs](#file-19)
+21. [src\core\parser.rs](#file-20)
+22. [src\lib.rs](#file-21)
+23. [src\main.rs](#file-22)
 
 ---
 
@@ -57,6 +60,98 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 
 <div id="file-2"></div>
 
+## 📄 examples\add_sub_other.ts3
+
+```ts3
+// ============================================================
+// 演示 AddOther / SubOther / GetOther
+//
+// AddOther addr,n : cell[addr] += n（直接操作目标 cell，不经过 ptr）
+// SubOther addr,n : cell[addr] -= n
+// GetOther addr   : cell[ptr] = cell[addr]（从别的 cell 抄到当前）
+// ============================================================
+
+[WhatDoIDo] Note ===== Step 1: cell[0]='A'(65), cell[1]='A'(65) =====
+// PC 0
+
+[WhereAmI] Origin
+// PC 1: ptr = 0
+[WhatDoIDo] Add 65
+// PC 2: cell[0] = 65 = 'A'
+
+[WhereAmI] Add 1
+// PC 3: ptr = 1
+[WhatDoIDo] Add 65
+// PC 4: cell[1] = 65 = 'A'
+
+
+[WhatDoIDo] Note ===== Step 2: AddOther/SubOther 直接改目标 cell =====
+// PC 5
+
+[WhatDoIDo] AddOther 0,1
+// PC 6: cell[0] += 1 → 66 = 'B'（ptr 在 1，不影响结果）
+[WhatDoIDo] AddOther 1,2
+// PC 7: cell[1] += 2 → 67 = 'C'（ptr 在 1，不影响结果）
+
+
+[WhatDoIDo] Note ===== Step 3: 打印 cells 0~1 → "BC" =====
+// PC 8
+
+[WhereAmI] Origin
+// PC 9: ptr = 0
+[WhatDoIDo] Loop 11,13,2
+// PC 10: 循环 2 次，循环体 PC 11~13
+
+[WhatDoIDo] Print
+// PC 11: [循环体] 打印 → B C
+[WhereAmI] Add 1
+// PC 12: [循环体] ptr++
+[WhatDoIDo] Note
+// PC 13: [循环体结束]
+
+// --- 换行 ---
+[WhereAmI] Add 1
+// PC 14: ptr = 2（干净 cell）
+[WhatDoIDo] Add 10
+// PC 15: cell[2] = '\n'
+[WhatDoIDo] Print
+// PC 16: 换行
+//        输出至此: "BC\n"
+
+
+[WhatDoIDo] Note ===== Step 4: GetOther 从 cell[0] 抄值到当前 cell =====
+// PC 17
+
+[WhereAmI] JumpTo 3
+// PC 18: ptr = 3（一个空 cell）
+[WhatDoIDo] GetOther 0
+// PC 19: cell[3] = cell[0] = 66 = 'B'（ptr 在 3，从 cell[0] 抄过来）
+[WhatDoIDo] Print
+// PC 20: 打印 → B
+
+
+[WhatDoIDo] Note ===== Step 5: SubOther 演示 =====
+// PC 21
+
+[WhatDoIDo] SubOther 0,1
+// PC 22: cell[0] -= 1 → 65 = 'A'（ptr 在 3，直接改 cell[0]）
+[WhereAmI] Origin
+// PC 23: ptr = 0
+[WhatDoIDo] Print
+// PC 24: 打印 → A
+
+// --- 换行 ---
+[WhereAmI] JumpTo 5
+// PC 25: ptr = 5（干净 cell，避免覆盖 cell[1] 的 'C'）
+[WhatDoIDo] Add 10
+// PC 26: cell[5] = '\n'
+[WhatDoIDo] Print
+// PC 27: 换行
+//        最终输出: "BC\nBA\n"
+```
+
+<div id="file-3"></div>
+
 ## 📄 examples\condition.ts3
 
 ```ts3
@@ -71,7 +166,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 [WhatDoIDo] Println
 ```
 
-<div id="file-3"></div>
+<div id="file-4"></div>
 
 ## 📄 examples\demo.ts3
 
@@ -215,7 +310,161 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 //         程序结束（PC 48 >= 48 条指令，run() 退出）
 ```
 
-<div id="file-4"></div>
+<div id="file-5"></div>
+
+## 📄 examples\fibonacci.ts3
+
+```ts3
+// ============================================================
+// Fibonacci: 0,1,1,2,3,5,8,13,21,34,55,89 (前 12 项)
+//
+// FreeOther 直接清零任意 cell，不再需要 SubOther 循环清零
+// ============================================================
+
+[WhatDoIDo] Note ===== Init =====
+// PC 0
+
+[WhereAmI] Origin
+// PC 1: ptr=0, cell[0]=0 (F0)
+[WhereAmI] Add 1
+// PC 2: ptr=1
+[WhatDoIDo] Add 1
+// PC 3: cell[1]=1 (F1)
+
+[WhereAmI] JumpTo 30
+// PC 4: ptr=30
+[WhatDoIDo] Add 10
+// PC 5: cell[30]='\n'
+
+
+[WhatDoIDo] Note ===== Outer Loop: 12 次 =====
+// PC 6
+
+[WhatDoIDo] Loop 8,45,12
+// PC 7: 循环 12 次，循环体 PC 8~44
+
+
+// ==== 输出 ====
+[WhatDoIDo] Note
+// PC 8
+
+[WhatDoIDo] Dump 0,1
+// PC 9: 打印 cell[0] 十进制值
+[WhereAmI] JumpTo 30
+// PC 10: ptr=30
+[WhatDoIDo] Print
+// PC 11: 换行
+
+
+// ==== temp = a + b: cell[2] = cell[0] + cell[1] ====
+[WhatDoIDo] Note
+// PC 12
+
+[WhereAmI] JumpTo 2
+// PC 13: ptr=2
+[WhatDoIDo] GetOther 0
+// PC 14: cell[2] = a
+
+[WhereAmI] JumpTo 3
+// PC 15: ptr=3
+[WhatDoIDo] GetOther 1
+// PC 16: cell[3] = b (counter)
+
+[WhatDoIDo] Note
+// PC 17: ADD_LOOP
+
+[WhatDoIDo] IfZero 22
+// PC 18: counter==0 → done
+
+[WhatDoIDo] AddOther 2,1
+// PC 19: cell[2] += 1
+
+[WhatDoIDo] SubOther 3,1
+// PC 20: counter -= 1
+
+[WhatDoIDo] JumpTo 17
+// PC 21: loop
+
+[WhatDoIDo] Note
+// PC 22: cell[2] = a+b
+
+
+// ==== Save old_b ====
+[WhatDoIDo] Note
+// PC 23
+
+[WhereAmI] JumpTo 4
+// PC 24: ptr=4
+[WhatDoIDo] GetOther 1
+// PC 25: cell[4] = old b
+
+
+// ==== b = temp: cell[1] = cell[2] ====
+[WhatDoIDo] Note
+// PC 26
+
+[WhatDoIDo] FreeOther 1
+// PC 27: cell[1] = 0 
+
+[WhereAmI] JumpTo 3
+// PC 28: ptr=3
+[WhatDoIDo] GetOther 2
+// PC 29: cell[3] = cell[2] (counter)
+
+[WhatDoIDo] Note
+// PC 30: CPY1
+
+[WhatDoIDo] IfZero 35
+// PC 31: done
+
+[WhatDoIDo] AddOther 1,1
+// PC 32: cell[1] += 1
+
+[WhatDoIDo] SubOther 3,1
+// PC 33: counter -= 1
+
+[WhatDoIDo] JumpTo 30
+// PC 34: loop
+
+[WhatDoIDo] Note
+// PC 35: cell[1] = temp
+
+
+// ==== a = old_b: cell[0] = cell[4] ====
+[WhatDoIDo] Note
+// PC 36
+
+[WhatDoIDo] FreeOther 0
+// PC 37: cell[0] = 0 
+
+[WhereAmI] JumpTo 3
+// PC 38: ptr=3
+[WhatDoIDo] GetOther 4
+// PC 39: cell[3] = old_b (counter)
+
+[WhatDoIDo] Note
+// PC 40: CPY0
+
+[WhatDoIDo] IfZero 45
+// PC 41: counter==0 → 跳出到 PC 45
+
+[WhatDoIDo] AddOther 0,1
+// PC 42: cell[0] += 1
+
+[WhatDoIDo] SubOther 3,1
+// PC 43: counter -= 1
+
+[WhatDoIDo] JumpTo 40
+// PC 44: 循环
+
+[WhatDoIDo] Note
+// PC 45: 循环体结束 — 外层 Loop 检测 PC>45 → 跳回 loop_pc(7)
+
+
+// 程序结束（12 次迭代后退出）
+```
+
+<div id="file-6"></div>
 
 ## 📄 examples\hello_world.ts3
 
@@ -296,7 +545,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 [WhatDoIDo] Println
 ```
 
-<div id="file-5"></div>
+<div id="file-7"></div>
 
 ## 📄 examples\if_zero.ts3
 
@@ -313,7 +562,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 [WhatDoIDo] ResetOrigin
 ```
 
-<div id="file-6"></div>
+<div id="file-8"></div>
 
 ## 📄 examples\loop.ts3
 
@@ -326,7 +575,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 [WhatDoIDo] Note          // PC 5: 循环体结束 (end_pc=5)
 ```
 
-<div id="file-7"></div>
+<div id="file-9"></div>
 
 ## 📄 examples\overview.ts3
 
@@ -470,7 +719,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 // ════════════════════════════════════════════════════════
 ```
 
-<div id="file-8"></div>
+<div id="file-10"></div>
 
 ## 📄 examples\panic.ts3
 
@@ -486,7 +735,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 [WhatDoIDo] Panic PaincTest
 ```
 
-<div id="file-9"></div>
+<div id="file-11"></div>
 
 ## 📄 examples\read.ts3
 
@@ -647,7 +896,115 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 // ════════════════════════════════════════════════════════
 ```
 
-<div id="file-10"></div>
+<div id="file-12"></div>
+
+## 📄 examples\reverse.ts3
+
+```ts3
+// ============================================================
+// Playground — 演示 Reverse / Dump
+//
+// 在 cells[0..5] 存入 "HELLO"，打印 → Reverse → 再打印
+// ============================================================
+
+[WhatDoIDo] Note ===== Step 1: 在 cells 0~4 存入 "HELLO" =====
+// PC 0
+
+[WhatDoIDo] Add 72
+// PC 1:  cell[0] = 72 = 'H'
+[WhereAmI] Add 1
+// PC 2:  ptr = 1
+[WhatDoIDo] Add 69
+// PC 3:  cell[1] = 69 = 'E'
+[WhereAmI] Add 1
+// PC 4:  ptr = 2
+[WhatDoIDo] Add 76
+// PC 5:  cell[2] = 76 = 'L'
+[WhereAmI] Add 1
+// PC 6:  ptr = 3
+[WhatDoIDo] Add 76
+// PC 7:  cell[3] = 76 = 'L'
+[WhereAmI] Add 1
+// PC 8:  ptr = 4
+[WhatDoIDo] Add 79
+// PC 9:  cell[4] = 79 = 'O'
+
+// --- 在远处存换行符，避免被 Reverse 影响 ---
+[WhereAmI] JumpTo 20
+// PC 10: ptr = 20
+[WhatDoIDo] Add 10
+// PC 11: cell[20] = 10 = '\n'
+
+
+[WhatDoIDo] Note ===== Step 2: Dump 原始内存 =====
+// PC 12
+
+[WhatDoIDo] Dump 0,5
+// PC 13: 输出 "0:72 1:69 2:76 3:76 4:79"
+//        （调试信息，显示每个 cell 的值）
+
+
+[WhatDoIDo] Note ===== Step 3: 打印原始 "HELLO" =====
+// PC 14
+
+[WhereAmI] Origin
+// PC 15: ptr = 0
+[WhatDoIDo] Loop 17,19,5
+// PC 16: 循环 5 次，循环体 PC 17~19
+
+[WhatDoIDo] Print
+// PC 17: [循环体] 打印 → H E L L O
+[WhereAmI] Add 1
+// PC 18: [循环体] ptr++
+[WhatDoIDo] Note
+// PC 19: [循环体结束] PC→20 > 19 → 跳回 loop_pc(16)
+
+// --- 换行 ---
+[WhereAmI] JumpTo 20
+// PC 20: ptr = 20
+[WhatDoIDo] Print
+// PC 21: 打印 '\n'
+
+
+[WhatDoIDo] Note ===== Step 4: Reverse! =====
+// PC 22
+
+[WhatDoIDo] Reverse 0,5
+// PC 23: 反转 cells[0..5] → 原地变成 O L L E H
+//        [79,76,76,69,72] = "OLLEH"
+
+
+[WhatDoIDo] Note ===== Step 5: Dump 反转后内存 =====
+// PC 24
+
+[WhatDoIDo] Dump 0,5
+// PC 25: 输出 "0:79 1:76 2:76 3:69 4:72"
+
+
+[WhatDoIDo] Note ===== Step 6: 打印反转后的 "OLLEH" =====
+// PC 26
+
+[WhereAmI] Origin
+// PC 27: ptr = 0
+[WhatDoIDo] Loop 29,31,5
+// PC 28: 循环 5 次，循环体 PC 29~31
+
+[WhatDoIDo] Print
+// PC 29: [循环体] 打印 → O L L E H
+[WhereAmI] Add 1
+// PC 30: [循环体] ptr++
+[WhatDoIDo] Note
+// PC 31: [循环体结束]
+
+// --- 换行 ---
+[WhereAmI] JumpTo 20
+// PC 32: ptr = 20
+[WhatDoIDo] Println
+// PC 33: 打印 '\n' + 换行
+//         程序结束
+```
+
+<div id="file-13"></div>
 
 ## 📄 examples\ts3.ts3
 
@@ -710,7 +1067,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 // PC 21: 换行，程序结束
 ```
 
-<div id="file-11"></div>
+<div id="file-14"></div>
 
 ## 📄 src\core\error.rs
 
@@ -754,13 +1111,13 @@ pub enum ThreeThoughtsError {
     #[error("Loop 指令参数不完整: 需要 start_pc,end_pc,times 共 3 个参数，实际提供了 {0} 个")]
     IncompleteLoopArgs(usize),
 
-    /// IfSome/IfNotSome 指令参数不完整（期望 2 个）
-    #[error("{0} 指令参数不完整: 需要 value,pc 共 2 个参数，实际提供了 {1} 个")]
-    IncompleteIfArgs(String, usize),
-
     /// IfName 指令参数不完整（期望 2 个：名称和 PC）
     #[error("IfName 指令参数不完整: 需要 name,pc 共 2 个参数，实际提供了 {0} 个")]
     IncompleteIfNameArgs(usize),
+
+    /// IfName 指令参数不完整（期望 2 个：名称和 PC）
+    #[error("{0} 指令参数不完整: 需要 {1},{2} 共 2 个参数，实际提供了 {3} 个")]
+    IncompleteAnyCoupleArgs(String, String, String, usize),
 
     /// 程序中没有有效指令
     #[error("程序为空，没有找到任何有效指令")]
@@ -795,7 +1152,7 @@ pub enum ThreeThoughtsError {
 }
 ```
 
-<div id="file-12"></div>
+<div id="file-15"></div>
 
 ## 📄 src\core\execute.rs
 
@@ -864,9 +1221,23 @@ impl VM {
                     self.memory.cells[self.memory.pointer] =
                         self.memory.cells[self.memory.pointer].wrapping_add(*a as u8);
                 }
+                WhatInstruction::AddOther(addr,add) => {
+                    self.memory.cells[*addr] =
+                        self.memory.cells[*addr].wrapping_add(*add as u8);
+                }
                 WhatInstruction::Sub(b) => {
                     self.memory.cells[self.memory.pointer] =
                         self.memory.cells[self.memory.pointer].wrapping_sub(*b as u8);
+                }
+                WhatInstruction::SubOther(addr,add) => {
+                    self.memory.cells[*addr] =
+                        self.memory.cells[*addr].wrapping_sub(*add as u8);
+                }
+                WhatInstruction::Free => {
+                    self.memory.set_current(0);
+                }
+                WhatInstruction::FreeOther(a) => {
+                    self.memory.cells[*a] = 0
                 }
                 WhatInstruction::Print => {
                     print!("{}", self.memory.cells[self.memory.pointer] as char)
@@ -1003,6 +1374,22 @@ impl VM {
                         self.memory.expand(*addr);
                     }
                     self.memory.cells[*addr] = value;
+                }
+                WhatInstruction::Dump(addr1, addr2) => {
+                    let start = *addr1;
+                    let end = (*addr2).min(self.memory.cells.len());
+                    for i in start..end {
+                        print!("{}:{} ", i, self.memory.cells[i]);
+                    }
+                    println!();
+                },
+                WhatInstruction::Reverse(addr1, addr2) => {
+                    let start = *addr1;
+                    let end = (*addr2).min(self.memory.cells.len());
+                    self.memory.cells[start..end].reverse();
+                },
+                WhatInstruction::GetOther(a) => {
+                    self.memory.cells[self.memory.pointer] = self.memory.cells[*a]
                 }
             },
         }
@@ -1416,7 +1803,7 @@ mod tests {
 }
 ```
 
-<div id="file-13"></div>
+<div id="file-16"></div>
 
 ## 📄 src\core\instruction.rs
 
@@ -1448,7 +1835,11 @@ pub enum WhereInstruction {
 #[derive(Debug, PartialEq, Clone)]
 pub enum WhatInstruction {
     Add(usize), // 单元格值增加一定值
+    AddOther(usize, usize),
+    SubOther(usize, usize),
     Sub(usize), // 单元格值减少一定值
+    Free,
+    FreeOther(usize),
     Loop(LoopState),
     Print,                   // 输出当前单元格的值（不换行）
     Println,                 // 输出当前单元格的值（换行）
@@ -1464,10 +1855,13 @@ pub enum WhatInstruction {
     Panic(String),           // 强行使程序 Panic,
     Read(usize),             // 读取单个字节于某一地址
     ReadASCII(usize),
+    Dump(usize, usize),
+    Reverse(usize, usize),
+    GetOther(usize),
 }
 ```
 
-<div id="file-14"></div>
+<div id="file-17"></div>
 
 ## 📄 src\core\loop_and_condition.rs
 
@@ -1481,7 +1875,7 @@ pub struct LoopState {
 }
 ```
 
-<div id="file-15"></div>
+<div id="file-18"></div>
 
 ## 📄 src\core\memory.rs
 
@@ -1582,7 +1976,7 @@ mod tests {
 }
 ```
 
-<div id="file-16"></div>
+<div id="file-19"></div>
 
 ## 📄 src\core\mod.rs
 
@@ -1595,7 +1989,7 @@ pub mod memory;
 pub mod parser;
 ```
 
-<div id="file-17"></div>
+<div id="file-20"></div>
 
 ## 📄 src\core\parser.rs
 
@@ -1707,6 +2101,32 @@ pub fn parse_what(str: &str) -> Result<WhatInstruction, ThreeThoughtsError> {
             })
     };
 
+    // 辅助：解析两个逗号分隔的 usize 参数（IfSome/Dump/Reverse/AddOther... 共用）
+    let parse_pair = |inst_name: &str| -> Result<(usize, usize), ThreeThoughtsError> {
+        let rest = get_rest(str, 2);
+        let vals: Vec<&str> = get_values(&rest)
+            .into_iter()
+            .filter(|s| !s.is_empty())
+            .collect();
+        if vals.len() < 2 {
+            return Err(ThreeThoughtsError::IncompleteAnyCoupleArgs(
+                inst_name.into(),
+                "arg1".into(),
+                "arg2".into(),
+                vals.len(),
+            ));
+        }
+        let v1 = vals[0].parse::<usize>().map_err(|_| ThreeThoughtsError::InvalidWhatArg {
+            instruction: inst_name.into(),
+            arg: vals[0].into(),
+        })?;
+        let v2 = vals[1].parse::<usize>().map_err(|_| ThreeThoughtsError::InvalidWhatArg {
+            instruction: inst_name.into(),
+            arg: vals[1].into(),
+        })?;
+        Ok((v1, v2))
+    };
+
     match sub {
         "Print" => Ok(WhatInstruction::Print),
         "Println" => Ok(WhatInstruction::Println),
@@ -1749,64 +2169,28 @@ pub fn parse_what(str: &str) -> Result<WhatInstruction, ThreeThoughtsError> {
             }))
         }
         "Add" => Ok(WhatInstruction::Add(parse_usize("Add")?)),
+        "AddOther" => {
+            let (addr, add) = parse_pair("AddOther")?;
+            Ok(WhatInstruction::AddOther(addr, add))
+        },
+        "SubOther" => {
+            let (addr, sub) = parse_pair("SubOther")?;
+            Ok(WhatInstruction::SubOther(addr, sub))
+        },
         "Sub" => Ok(WhatInstruction::Sub(parse_usize("Sub")?)),
+        "Free" => Ok(WhatInstruction::Free),
+        "FreeOther" => Ok(WhatInstruction::FreeOther(parse_usize("FreeOther")?)),
         "Note" => Ok(WhatInstruction::Note),
         "Reset" => Ok(WhatInstruction::Reset),
         "ResetOrigin" => Ok(WhatInstruction::ResetOrigin),
         "IfZero" => Ok(WhatInstruction::IfZero(parse_usize("IfZero")?)),
         "IfNotZero" => Ok(WhatInstruction::IfNotZero(parse_usize("IfNotZero")?)),
         "IfSome" => {
-            let rest = get_rest(str, 2);
-            let vals: Vec<&str> = get_values(&rest)
-                .into_iter()
-                .filter(|s| !s.is_empty())
-                .collect();
-            if vals.len() < 2 {
-                return Err(ThreeThoughtsError::IncompleteIfArgs(
-                    "IfSome".into(),
-                    vals.len(),
-                ));
-            }
-            let value =
-                vals[0]
-                    .parse::<usize>()
-                    .map_err(|_| ThreeThoughtsError::InvalidWhatArg {
-                        instruction: "IfSome".into(),
-                        arg: vals[0].into(),
-                    })?;
-            let pc = vals[1]
-                .parse::<usize>()
-                .map_err(|_| ThreeThoughtsError::InvalidWhatArg {
-                    instruction: "IfSome".into(),
-                    arg: vals[1].into(),
-                })?;
+            let (value, pc) = parse_pair("IfSome")?;
             Ok(WhatInstruction::IfSome(value, pc))
         }
         "IfNotSome" => {
-            let rest = get_rest(str, 2);
-            let vals: Vec<&str> = get_values(&rest)
-                .into_iter()
-                .filter(|s| !s.is_empty())
-                .collect();
-            if vals.len() < 2 {
-                return Err(ThreeThoughtsError::IncompleteIfArgs(
-                    "IfNotSome".into(),
-                    vals.len(),
-                ));
-            }
-            let value =
-                vals[0]
-                    .parse::<usize>()
-                    .map_err(|_| ThreeThoughtsError::InvalidWhatArg {
-                        instruction: "IfNotSome".into(),
-                        arg: vals[0].into(),
-                    })?;
-            let pc = vals[1]
-                .parse::<usize>()
-                .map_err(|_| ThreeThoughtsError::InvalidWhatArg {
-                    instruction: "IfNotSome".into(),
-                    arg: vals[1].into(),
-                })?;
+            let (value, pc) = parse_pair("IfNotSome")?;
             Ok(WhatInstruction::IfNotSome(value, pc))
         }
         "IfName" => {
@@ -1839,6 +2223,15 @@ pub fn parse_what(str: &str) -> Result<WhatInstruction, ThreeThoughtsError> {
             let rest = get_rest(str, 2);
             Ok(WhatInstruction::ReadASCII(parse_usize(&rest)?))
         }
+        "Dump" => {
+            let (addr1, addr2) = parse_pair("Dump")?;
+            Ok(WhatInstruction::Dump(addr1, addr2))
+        }
+        "Reverse" => {
+            let (addr1, addr2) = parse_pair("Reverse")?;
+            Ok(WhatInstruction::Reverse(addr1, addr2))
+        },
+        "GetOther" => Ok(WhatInstruction::GetOther(parse_usize("GetOther")?)),
         _ => Err(ThreeThoughtsError::UnknownWhatInstruction(sub.to_string())),
     }
 }
@@ -2040,7 +2433,12 @@ mod tests {
         let result = parse_what("[WhatDoIDo] IfSome 48");
         assert_eq!(
             result,
-            Err(ThreeThoughtsError::IncompleteIfArgs("IfSome".into(), 1))
+            Err(ThreeThoughtsError::IncompleteAnyCoupleArgs(
+                "IfSome".into(),
+                "arg1".into(),
+                "arg2".into(),
+                1,
+            ))
         );
     }
 
@@ -2084,7 +2482,7 @@ mod tests {
 }
 ```
 
-<div id="file-18"></div>
+<div id="file-21"></div>
 
 ## 📄 src\lib.rs
 
@@ -2092,7 +2490,7 @@ mod tests {
 pub mod core;
 ```
 
-<div id="file-19"></div>
+<div id="file-22"></div>
 
 ## 📄 src\main.rs
 
