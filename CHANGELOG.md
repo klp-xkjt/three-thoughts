@@ -11,12 +11,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [0.1.0] - 2026-07-11
+## [0.1.0] - 2026-07-12
 
 ### Added
 
+- 虚拟机核心：`VM` 结构体，支持 PC、指令执行、运行循环
+- 内存模型：线性 `Vec<u8>` 单元 + 指针，支持动态扩展
+- 三类指令体系（共 31 条）：
+  - **WhoAmI**（2）：`Named`、`Renamed` — VM 身份
+  - **WhereAmI**（5）：`Origin`、`Keep`、`JumpTo`、`Add`、`Sub` — 指针操作
+  - **WhatDoIDo**（24）：`Add`、`Sub`、`AddOther`、`SubOther`、`Free`、`FreeOther`、`GetOther`、`Print`、`Println`、`Note`、`Reset`、`ResetOrigin`、`Loop`、`JumpTo`、`IfZero`、`IfNotZero`、`IfSome`、`IfNotSome`、`IfName`、`Panic`、`Read`、`ReadASCII`、`Dump`、`Reverse` — 计算与控制流
+- 循环支持：`Loop`（固定次数）+ `IfZero`/`JumpTo`（条件 while 循环），支持嵌套
+- 条件分支：`IfZero`、`IfNotZero`、`IfSome`、`IfNotSome`、`IfName` 五种条件跳转
+- 输入系统：`Read`（读原始字节）、`ReadASCII`（读十进制 ASCII 码），自动跳过空白
+- 调试工具：`Dump`（打印内存）、`--debug` CLI flag（逐指令追踪 PC/ptr/cell/循环状态）
+- 错误系统：17 种结构化错误类型，覆盖解析和运行时
+- `//` 注释支持（整行 + 行内）
+- CLI：`cargo run -- run <file>`，支持 `--mem` 和 `--debug`
+- 示例程序：hello_world、loop、condition、if_zero、demo、overview、read、playground、fibonacci、add_sub_other
 
----
+### Fixed
+
+- Loop 终止时未跳出循环体（`execute.rs`：缺 `self.pc = l.end_pc`）
+- 解析器不支持逗号后空格（新增 `get_rest` 合并 token）
+- 行内 `//` 注释与逗号参数解析冲突
+- `SubOther` 解析为 `AddOther`（copy-paste 遗留）
+- `AddOther`/`SubOther` 读 `pointer` 而非目标 `addr`（语义修正）
+- `Read`/`ReadASCII` 缓冲区残留 `\n` 干扰下一次输入
+
+### Changed
+
+- 错误类型从单一 `NoInstructions(String)` 扩展为 17 种结构化错误
+- `parse_pair` 闭包统一 IfSome/IfNotSome/Dump/Reverse/AddOther 的双参数解析
+- `VM::new` 增加 `debug` 参数
 
 ## 版本标记说明
 
