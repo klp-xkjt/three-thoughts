@@ -1,0 +1,9 @@
+[WhatDoIDo] Dump 0,5
+[WhatDoIDo] Add 72
+[WhatDoIDo] Dump 0,5
+[WhereAmI] Add 1  
+[WhatDoIDo] Add 101
+[WhatDoIDo] Dump 0,5
+[WhereAmI] Add 1  
+[WhatDoIDo] Copy 0,2
+[WhatDoIDo] Dump 0,5

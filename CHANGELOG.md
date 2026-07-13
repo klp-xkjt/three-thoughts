@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- 添加了原生支持的 `While` 循环指令，属于 `WhatDoIDo`
+- 添加了 `Copy` 拷贝指令，属于 `WhatDoIDo`
+- 添加了 `DumpWN` 调试输出指令（带有编号），属于 `WhatDoIDo`
+
+### Changed
+- `WhatDoIDo`的`Dump`指令功能迁移到`DumpWN`，`Dump` 现在只输出单元格的值而不带有编号，`DumpWN` 是原 `Dump` 指令（输出带编号）
 ---
 
 ## [0.1.1] - 2026-07-12

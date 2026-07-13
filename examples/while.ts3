@@ -1,0 +1,80 @@
+// ============================================================
+// While Demo: 用 While 打印 "Hello" 3 次
+//
+// While addr, body_start, exit_pc:
+//   - 若 cell[addr] != 0: cell[addr]--, 跳到 body_start
+//   - 若 cell[addr] == 0: 跳到 exit_pc (退出循环)
+//   注意: 循环体末尾必须手动 JumpTo 回到 While 指令!
+// ============================================================
+
+// === Init ===
+[WhatDoIDo] Add 3
+// PC 0: cell[0]=3 (计数器)
+[WhereAmI] Add 1
+// PC 1: ptr=1
+[WhatDoIDo] Add 72
+// PC 2: cell[1]='H'
+[WhereAmI] Add 1
+// PC 3: ptr=2
+[WhatDoIDo] Add 101
+// PC 4: cell[2]='e'
+[WhereAmI] Add 1
+// PC 5: ptr=3
+[WhatDoIDo] Add 108
+// PC 6: cell[3]='l'
+[WhereAmI] Add 1
+// PC 7: ptr=4
+[WhatDoIDo] Add 108
+// PC 8: cell[4]='l'
+[WhereAmI] Add 1
+// PC 9: ptr=5
+[WhatDoIDo] Add 111
+// PC 10: cell[5]='o'
+
+[WhereAmI] JumpTo 100
+// PC 11: ptr=100
+[WhatDoIDo] Add 10
+// PC 12: cell[100]='\n'
+
+// === While Loop ===
+[WhatDoIDo] While 0,15,29
+// PC 13: while cell[0]!=0: goto 15 else goto 29
+[WhatDoIDo] Note
+// PC 14: unreachable (While always jumps)
+
+// Loop body: print "Hello" + newline
+[WhereAmI] JumpTo 1
+// PC 15: ptr=1
+[WhatDoIDo] Print
+// PC 16: 'H'
+[WhereAmI] Add 1
+// PC 17: ptr=2
+[WhatDoIDo] Print
+// PC 18: 'e'
+[WhereAmI] Add 1
+// PC 19: ptr=3
+[WhatDoIDo] Print
+// PC 20: 'l'
+[WhereAmI] Add 1
+// PC 21: ptr=4
+[WhatDoIDo] Print
+// PC 22: 'l'
+[WhereAmI] Add 1
+// PC 23: ptr=5
+[WhatDoIDo] Print
+// PC 24: 'o'
+[WhereAmI] JumpTo 100
+// PC 25: ptr=100
+[WhatDoIDo] Print
+// PC 26: '\n'
+
+// === 回到 While ===
+[WhatDoIDo] JumpTo 13
+// PC 27: 回到 While 判断循环条件
+[WhatDoIDo] Note
+// PC 28: unreachable
+
+// === 退出循环后 ===
+[WhatDoIDo] Note
+// PC 29: 循环出口 (While exit)
+// 预期输出: Hello 打印 3 次

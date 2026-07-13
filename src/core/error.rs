@@ -41,9 +41,13 @@ pub enum ThreeThoughtsError {
     #[error("IfName 指令参数不完整: 需要 name,pc 共 2 个参数，实际提供了 {0} 个")]
     IncompleteIfNameArgs(usize),
 
-    /// IfName 指令参数不完整（期望 2 个：名称和 PC）
+    /// 指令参数不完整（期望 2 个：名称和 PC）
     #[error("{0} 指令参数不完整: 需要 {1},{2} 共 2 个参数，实际提供了 {3} 个")]
     IncompleteAnyCoupleArgs(String, String, String, usize),
+
+    /// 指令参数不完整（期望 2 个：名称和 PC）
+    #[error("{0} 指令参数不完整: 需要 {1},{2},{3} 共 3 个参数，实际提供了 {4} 个")]
+    IncompleteAnyThreeArgs(String, String, String, String, usize),
 
     /// 程序中没有有效指令
     #[error("程序为空，没有找到任何有效指令")]

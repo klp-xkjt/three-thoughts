@@ -28,9 +28,9 @@ pub enum WhatInstruction {
     AddOther(usize, usize),
     SubOther(usize, usize),
     Sub(usize), // 单元格值减少一定值
-    Free,
-    FreeOther(usize),
-    Loop(LoopState),
+    Free,                    // 释放当前单元格的内存
+    FreeOther(usize),        // 释放指定单元格的内存
+    Loop(LoopState),         // 有限次数循环体
     Print,                   // 输出当前单元格的值（不换行）
     Println,                 // 输出当前单元格的值（换行）
     Note,                    // 注释
@@ -44,8 +44,11 @@ pub enum WhatInstruction {
     JumpTo(usize),           // 直接跳转 PC
     Panic(String),           // 强行使程序 Panic,
     Read(usize),             // 读取单个字节于某一地址
-    ReadASCII(usize),
-    Dump(usize, usize),
-    Reverse(usize, usize),
-    GetOther(usize),
+    ReadASCII(usize),        // 读ASCII十进制码并转为ASCLL字符，存于指定地址
+    Dump(usize, usize),      // 调试输出单元格
+    DumpWN(usize, usize),      // 调试输出单元格，带有单元格
+    Reverse(usize, usize),   // 反转单元格的值
+    GetOther(usize),         // 获得指定单元格值于本单元格
+    While(usize, usize, usize),
+    Copy(usize, usize)
 }

@@ -220,6 +220,14 @@ impl VM {
                     let start = *addr1;
                     let end = (*addr2).min(self.memory.cells.len());
                     for i in start..end {
+                        print!("{} ", self.memory.cells[i]);
+                    }
+                    println!();
+                },
+                WhatInstruction::DumpWN(addr1, addr2) => {
+                    let start = *addr1;
+                    let end = (*addr2).min(self.memory.cells.len());
+                    for i in start..end {
                         print!("{}:{} ", i, self.memory.cells[i]);
                     }
                     println!();
@@ -231,6 +239,20 @@ impl VM {
                 },
                 WhatInstruction::GetOther(a) => {
                     self.memory.cells[self.memory.pointer] = self.memory.cells[*a]
+                },
+                WhatInstruction::While(addr, pc1, pc2) => {
+                    if self.memory.cells[*addr] != 0 {
+                        self.memory.cells[*addr] -= 1;
+                        self.pc = *pc1;
+                        return Ok(true);
+                    }
+                    self.pc = *pc2;
+                    return Ok(true);
+                },
+                WhatInstruction::Copy(from,to ) => {
+                    self.memory.cells[*to] = self.memory.cells[*from];
+                    self.memory.cells[*from] = 0;
+                    return Ok(false);
                 }
             },
         }
@@ -621,6 +643,48 @@ mod tests {
 
         let mut vm = VM::new(instructions, 65536, false);
         vm.run()?;
+        Ok(())
+    }
+
+    #[test]
+    fn test_while_basic() -> Result<(), ThreeThoughtsError> {
+        // cell[10]=3, While 10,3,7
+        // body: AddOther 11,5 (add 5 to cell[11])
+        // loop: JumpTo 2 (back to While)
+        // Expected: 3 iterations, cell[11]=15
+        let instructions = vec![
+            ThreeThoughts::WhereAmI(WhereInstruction::JumpTo(10)),
+            ThreeThoughts::WhatDoIDo(WhatInstruction::Add(3)),
+            ThreeThoughts::WhatDoIDo(WhatInstruction::While(10, 3, 7)),
+            ThreeThoughts::WhatDoIDo(WhatInstruction::AddOther(11, 5)),
+            ThreeThoughts::WhatDoIDo(WhatInstruction::JumpTo(2)),
+            ThreeThoughts::WhatDoIDo(WhatInstruction::Note),
+            ThreeThoughts::WhatDoIDo(WhatInstruction::Note),
+        ];
+
+        let mut vm = VM::new(instructions, 65536, false);
+        vm.run()?;
+
+        assert_eq!(vm.memory.cells[11], 15, "3 iters x 5 = 15");
+        assert_eq!(vm.memory.cells[10], 0, "counter should reach 0");
+        Ok(())
+    }
+
+    #[test]
+    fn test_while_zero_skips() -> Result<(), ThreeThoughtsError> {
+        // cell[10]=0, While immediately exits
+        let instructions = vec![
+            ThreeThoughts::WhatDoIDo(WhatInstruction::While(10, 2, 5)),
+            ThreeThoughts::WhatDoIDo(WhatInstruction::Add(5)),
+            ThreeThoughts::WhatDoIDo(WhatInstruction::JumpTo(0)),
+            ThreeThoughts::WhatDoIDo(WhatInstruction::Note),
+            ThreeThoughts::WhatDoIDo(WhatInstruction::Note),
+        ];
+
+        let mut vm = VM::new(instructions, 65536, false);
+        vm.run()?;
+
+        assert_eq!(vm.memory.cells[0], 0, "body should not execute");
         Ok(())
     }
 

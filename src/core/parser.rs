@@ -131,6 +131,36 @@ pub fn parse_what(str: &str) -> Result<WhatInstruction, ThreeThoughtsError> {
         Ok((v1, v2))
     };
 
+    let parse_three = |inst_name: &str| -> Result<(usize, usize, usize), ThreeThoughtsError> {
+        let rest = get_rest(str, 2);
+        let vals: Vec<&str> = get_values(&rest)
+            .into_iter()
+            .filter(|s| !s.is_empty())
+            .collect();
+        if vals.len() < 3 {
+            return Err(ThreeThoughtsError::IncompleteAnyThreeArgs(
+                inst_name.into(),
+                "arg1".into(),
+                "arg2".into(),
+                "arg3".into(),
+                vals.len(),
+            ));
+        }
+        let v1 = vals[0].parse::<usize>().map_err(|_| ThreeThoughtsError::InvalidWhatArg {
+            instruction: inst_name.into(),
+            arg: vals[0].into(),
+        })?;
+        let v2 = vals[1].parse::<usize>().map_err(|_| ThreeThoughtsError::InvalidWhatArg {
+            instruction: inst_name.into(),
+            arg: vals[1].into(),
+        })?;
+        let v3 = vals[2].parse::<usize>().map_err(|_| ThreeThoughtsError::InvalidWhatArg {
+            instruction: inst_name.into(),
+            arg: vals[2].into(),
+        })?;
+        Ok((v1, v2, v3))
+    };
+
     match sub {
         "Print" => Ok(WhatInstruction::Print),
         "Println" => Ok(WhatInstruction::Println),
@@ -231,11 +261,23 @@ pub fn parse_what(str: &str) -> Result<WhatInstruction, ThreeThoughtsError> {
             let (addr1, addr2) = parse_pair("Dump")?;
             Ok(WhatInstruction::Dump(addr1, addr2))
         }
+        "DumpWN" => {
+            let (addr1, addr2) = parse_pair("Dump")?;
+            Ok(WhatInstruction::DumpWN(addr1, addr2))
+        }
         "Reverse" => {
             let (addr1, addr2) = parse_pair("Reverse")?;
             Ok(WhatInstruction::Reverse(addr1, addr2))
         },
         "GetOther" => Ok(WhatInstruction::GetOther(parse_usize("GetOther")?)),
+        "While" => {
+            let (addr, pc1, pc2) = parse_three("While")?;
+            Ok(WhatInstruction::While(addr, pc1, pc2))
+        }
+        "Copy" => {
+            let (from, to) = parse_pair("Copy")?;
+            Ok(WhatInstruction::Copy(from, to))
+        }
         _ => Err(ThreeThoughtsError::UnknownWhatInstruction(sub.to_string())),
     }
 }

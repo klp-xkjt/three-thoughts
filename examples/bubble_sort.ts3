@@ -1,0 +1,550 @@
+// ============================================================
+// 冒泡排序 Bubble Sort
+// 对 [5, 2, 8, 1, 3] 排序 → [1, 2, 3, 5, 8]
+//
+// 内存布局:
+//   cells[0..4]   = 待排序数组
+//   cells[10]     = T1 (暂存 cell[a])
+//   cells[11]     = T2 (暂存 cell[b])
+//   cells[12]     = T3 (min 累加器: 同时递减得较小值)
+//   cells[14]     = 复制循环计数器
+//   cells[100]    = 换行符
+//
+// 比较算法: 通过同时递减 T1/T2, 先变为 0 的一方更小.
+// T3 记录 min, 另一个非零 temp = |diff|.
+// 若 a > b 则用 T3 + diff 原地还原完成 swap.
+//
+// 4 轮冒泡, 每轮比较 4 对: (0,1)(1,2)(2,3)(3,4)
+// ============================================================
+
+// === 初始化 (PC 0-14, 共 15 条) ===
+[WhatDoIDo] Note ===== Init =====
+// PC  0
+[WhereAmI] Origin
+// PC  1  ptr=0
+[WhatDoIDo] Add 5
+// PC  2  cell[0]=5
+[WhereAmI] Add 1
+// PC  3  ptr=1
+[WhatDoIDo] Add 2
+// PC  4  cell[1]=2
+[WhereAmI] Add 1
+// PC  5  ptr=2
+[WhatDoIDo] Add 8
+// PC  6  cell[2]=8
+[WhereAmI] Add 1
+// PC  7  ptr=3
+[WhatDoIDo] Add 1
+// PC  8  cell[3]=1
+[WhereAmI] Add 1
+// PC  9  ptr=4
+[WhatDoIDo] Add 3
+// PC 10  cell[4]=3
+
+[WhereAmI] JumpTo 100
+// PC 11  ptr=100
+[WhatDoIDo] Add 10
+// PC 12  cell[100]='\n'
+[WhatDoIDo] Dump 0,5
+// PC 13  打印初始数组: 0:5 1:2 2:8 3:1 4:3
+
+[WhatDoIDo] Note ===== Outer Loop =====
+// PC 14
+[WhatDoIDo] Loop 16,219,4
+// PC 15  循环体 PC 16~219, 执行 4 轮
+
+// ══════════════════════════════════════════════
+// Block 1: CMP cells[0] vs cells[1]  (PC 16-66)
+// ══════════════════════════════════════════════
+[WhatDoIDo] Note === CMP [0] vs [1] ===
+// PC 16
+
+// 保存副本: T1=cell[0], T2=cell[1], T3=0
+[WhereAmI] JumpTo 10
+// PC 17
+[WhatDoIDo] Free
+// PC 18
+[WhatDoIDo] GetOther 0
+// PC 19  T1=cell[0]
+[WhereAmI] JumpTo 11
+// PC 20
+[WhatDoIDo] Free
+// PC 21
+[WhatDoIDo] GetOther 1
+// PC 22  T2=cell[1]
+[WhereAmI] JumpTo 12
+// PC 23
+[WhatDoIDo] Free
+// PC 24  T3=0
+
+// CMP_LOOP: 同时递减 T1,T2 ; 先到 0 者较小
+[WhereAmI] JumpTo 10
+// PC 25  <-- CMP_LOOP
+[WhatDoIDo] IfZero 36
+// PC 26  T1=0 → CHECK_T2
+[WhereAmI] JumpTo 11
+// PC 27
+[WhatDoIDo] IfZero 40
+// PC 28  T2=0 → SWAP_NEEDED
+[WhereAmI] JumpTo 10
+// PC 29
+[WhatDoIDo] Sub 1
+// PC 30  T1--
+[WhereAmI] JumpTo 11
+// PC 31
+[WhatDoIDo] Sub 1
+// PC 32  T2--
+[WhereAmI] JumpTo 12
+// PC 33
+[WhatDoIDo] Add 1
+// PC 34  T3++
+[WhatDoIDo] JumpTo 25
+// PC 35  回路
+
+// CHECK_T2: T1 先到 0, 检查 T2
+[WhereAmI] JumpTo 11
+// PC 36  <-- CHECK_T2
+[WhatDoIDo] IfZero 66
+// PC 37  都为 0 (相等) → DONE
+[WhatDoIDo] Note
+// PC 38  NO_SWAP: T1=0, T2>0 → cell[0]<=cell[1]
+[WhatDoIDo] JumpTo 66
+// PC 39  → DONE
+
+// SWAP: T2 先到 0 → cell[0] > cell[1]
+[WhatDoIDo] FreeOther 0
+// PC 40  <-- SWAP_NEEDED
+[WhereAmI] JumpTo 14
+// PC 41
+[WhatDoIDo] Free
+// PC 42
+[WhatDoIDo] GetOther 12
+// PC 43  counter = T3 (min = cell[1])
+
+// cell[0] = T3
+[WhereAmI] JumpTo 14
+// PC 44  <-- CPY_X_LOOP
+[WhatDoIDo] IfZero 49
+// PC 45  → CPY_X_DONE
+[WhatDoIDo] Sub 1
+// PC 46
+[WhatDoIDo] AddOther 0, 1
+// PC 47
+[WhatDoIDo] JumpTo 44
+// PC 48  回路
+
+// cell[1] = T3
+[WhatDoIDo] FreeOther 1
+// PC 49  <-- CPY_X_DONE
+[WhereAmI] JumpTo 14
+// PC 50
+[WhatDoIDo] Free
+// PC 51
+[WhatDoIDo] GetOther 12
+// PC 52  counter = T3
+
+[WhereAmI] JumpTo 14
+// PC 53  <-- CPY_Y1_LOOP
+[WhatDoIDo] IfZero 58
+// PC 54  → CPY_Y1_DONE
+[WhatDoIDo] Sub 1
+// PC 55
+[WhatDoIDo] AddOther 1, 1
+// PC 56
+[WhatDoIDo] JumpTo 53
+// PC 57  回路
+
+// cell[1] += diff (T1)
+[WhereAmI] JumpTo 14
+// PC 58  <-- CPY_Y1_DONE
+[WhatDoIDo] Free
+// PC 59
+[WhatDoIDo] GetOther 10
+// PC 60  counter = T1 (diff = cell[0]-cell[1])
+
+[WhereAmI] JumpTo 14
+// PC 61  <-- CPY_Y2_LOOP
+[WhatDoIDo] IfZero 66
+// PC 62  → DONE
+[WhatDoIDo] Sub 1
+// PC 63
+[WhatDoIDo] AddOther 1, 1
+// PC 64
+[WhatDoIDo] JumpTo 61
+// PC 65  回路
+
+[WhatDoIDo] Note
+// PC 66  <-- DONE_CMP1
+
+// ══════════════════════════════════════════════
+// Block 2: CMP cells[1] vs cells[2]  (PC 67-117)
+// ══════════════════════════════════════════════
+[WhatDoIDo] Note === CMP [1] vs [2] ===
+// PC 67
+
+[WhereAmI] JumpTo 10
+// PC 68
+[WhatDoIDo] Free
+// PC 69
+[WhatDoIDo] GetOther 1
+// PC 70  T1=cell[1]
+[WhereAmI] JumpTo 11
+// PC 71
+[WhatDoIDo] Free
+// PC 72
+[WhatDoIDo] GetOther 2
+// PC 73  T2=cell[2]
+[WhereAmI] JumpTo 12
+// PC 74
+[WhatDoIDo] Free
+// PC 75  T3=0
+
+[WhereAmI] JumpTo 10
+// PC 76  <-- CMP_LOOP2
+[WhatDoIDo] IfZero 87
+// PC 77
+[WhereAmI] JumpTo 11
+// PC 78
+[WhatDoIDo] IfZero 91
+// PC 79
+[WhereAmI] JumpTo 10
+// PC 80
+[WhatDoIDo] Sub 1
+// PC 81
+[WhereAmI] JumpTo 11
+// PC 82
+[WhatDoIDo] Sub 1
+// PC 83
+[WhereAmI] JumpTo 12
+// PC 84
+[WhatDoIDo] Add 1
+// PC 85
+[WhatDoIDo] JumpTo 76
+// PC 86  回路
+
+[WhereAmI] JumpTo 11
+// PC 87  <-- CHECK_T2
+[WhatDoIDo] IfZero 117
+// PC 88
+[WhatDoIDo] Note
+// PC 89  NO_SWAP
+[WhatDoIDo] JumpTo 117
+// PC 90  → DONE
+
+[WhatDoIDo] FreeOther 1
+// PC 91  <-- SWAP_NEEDED
+[WhereAmI] JumpTo 14
+// PC 92
+[WhatDoIDo] Free
+// PC 93
+[WhatDoIDo] GetOther 12
+// PC 94  counter = T3
+
+[WhereAmI] JumpTo 14
+// PC 95  <-- CPY_X_LOOP
+[WhatDoIDo] IfZero 100
+// PC 96  → CPY_X_DONE
+[WhatDoIDo] Sub 1
+// PC 97
+[WhatDoIDo] AddOther 1, 1
+// PC 98
+[WhatDoIDo] JumpTo 95
+// PC 99  回路
+
+[WhatDoIDo] FreeOther 2
+// PC 100 <-- CPY_X_DONE
+[WhereAmI] JumpTo 14
+// PC 101
+[WhatDoIDo] Free
+// PC 102
+[WhatDoIDo] GetOther 12
+// PC 103 counter = T3
+
+[WhereAmI] JumpTo 14
+// PC 104 <-- CPY_Y1_LOOP
+[WhatDoIDo] IfZero 109
+// PC 105 → CPY_Y1_DONE
+[WhatDoIDo] Sub 1
+// PC 106
+[WhatDoIDo] AddOther 2, 1
+// PC 107
+[WhatDoIDo] JumpTo 104
+// PC 108 回路
+
+[WhereAmI] JumpTo 14
+// PC 109 <-- CPY_Y1_DONE
+[WhatDoIDo] Free
+// PC 110
+[WhatDoIDo] GetOther 10
+// PC 111 counter = T1 (diff)
+
+[WhereAmI] JumpTo 14
+// PC 112 <-- CPY_Y2_LOOP
+[WhatDoIDo] IfZero 117
+// PC 113 → DONE
+[WhatDoIDo] Sub 1
+// PC 114
+[WhatDoIDo] AddOther 2, 1
+// PC 115
+[WhatDoIDo] JumpTo 112
+// PC 116 回路
+
+[WhatDoIDo] Note
+// PC 117 <-- DONE_CMP2
+
+// ══════════════════════════════════════════════
+// Block 3: CMP cells[2] vs cells[3]  (PC 118-168)
+// ══════════════════════════════════════════════
+[WhatDoIDo] Note === CMP [2] vs [3] ===
+// PC 118
+
+[WhereAmI] JumpTo 10
+// PC 119
+[WhatDoIDo] Free
+// PC 120
+[WhatDoIDo] GetOther 2
+// PC 121 T1=cell[2]
+[WhereAmI] JumpTo 11
+// PC 122
+[WhatDoIDo] Free
+// PC 123
+[WhatDoIDo] GetOther 3
+// PC 124 T2=cell[3]
+[WhereAmI] JumpTo 12
+// PC 125
+[WhatDoIDo] Free
+// PC 126 T3=0
+
+[WhereAmI] JumpTo 10
+// PC 127 <-- CMP_LOOP3
+[WhatDoIDo] IfZero 138
+// PC 128
+[WhereAmI] JumpTo 11
+// PC 129
+[WhatDoIDo] IfZero 142
+// PC 130
+[WhereAmI] JumpTo 10
+// PC 131
+[WhatDoIDo] Sub 1
+// PC 132
+[WhereAmI] JumpTo 11
+// PC 133
+[WhatDoIDo] Sub 1
+// PC 134
+[WhereAmI] JumpTo 12
+// PC 135
+[WhatDoIDo] Add 1
+// PC 136
+[WhatDoIDo] JumpTo 127
+// PC 137 回路
+
+[WhereAmI] JumpTo 11
+// PC 138 <-- CHECK_T2
+[WhatDoIDo] IfZero 168
+// PC 139
+[WhatDoIDo] Note
+// PC 140 NO_SWAP
+[WhatDoIDo] JumpTo 168
+// PC 141 → DONE
+
+[WhatDoIDo] FreeOther 2
+// PC 142 <-- SWAP_NEEDED
+[WhereAmI] JumpTo 14
+// PC 143
+[WhatDoIDo] Free
+// PC 144
+[WhatDoIDo] GetOther 12
+// PC 145 counter = T3
+
+[WhereAmI] JumpTo 14
+// PC 146 <-- CPY_X_LOOP
+[WhatDoIDo] IfZero 151
+// PC 147 → CPY_X_DONE
+[WhatDoIDo] Sub 1
+// PC 148
+[WhatDoIDo] AddOther 2, 1
+// PC 149
+[WhatDoIDo] JumpTo 146
+// PC 150 回路
+
+[WhatDoIDo] FreeOther 3
+// PC 151 <-- CPY_X_DONE
+[WhereAmI] JumpTo 14
+// PC 152
+[WhatDoIDo] Free
+// PC 153
+[WhatDoIDo] GetOther 12
+// PC 154 counter = T3
+
+[WhereAmI] JumpTo 14
+// PC 155 <-- CPY_Y1_LOOP
+[WhatDoIDo] IfZero 160
+// PC 156 → CPY_Y1_DONE
+[WhatDoIDo] Sub 1
+// PC 157
+[WhatDoIDo] AddOther 3, 1
+// PC 158
+[WhatDoIDo] JumpTo 155
+// PC 159 回路
+
+[WhereAmI] JumpTo 14
+// PC 160 <-- CPY_Y1_DONE
+[WhatDoIDo] Free
+// PC 161
+[WhatDoIDo] GetOther 10
+// PC 162 counter = T1 (diff)
+
+[WhereAmI] JumpTo 14
+// PC 163 <-- CPY_Y2_LOOP
+[WhatDoIDo] IfZero 168
+// PC 164 → DONE
+[WhatDoIDo] Sub 1
+// PC 165
+[WhatDoIDo] AddOther 3, 1
+// PC 166
+[WhatDoIDo] JumpTo 163
+// PC 167 回路
+
+[WhatDoIDo] Note
+// PC 168 <-- DONE_CMP3
+
+// ══════════════════════════════════════════════
+// Block 4: CMP cells[3] vs cells[4]  (PC 169-219)
+// ══════════════════════════════════════════════
+[WhatDoIDo] Note === CMP [3] vs [4] ===
+// PC 169
+
+[WhereAmI] JumpTo 10
+// PC 170
+[WhatDoIDo] Free
+// PC 171
+[WhatDoIDo] GetOther 3
+// PC 172 T1=cell[3]
+[WhereAmI] JumpTo 11
+// PC 173
+[WhatDoIDo] Free
+// PC 174
+[WhatDoIDo] GetOther 4
+// PC 175 T2=cell[4]
+[WhereAmI] JumpTo 12
+// PC 176
+[WhatDoIDo] Free
+// PC 177 T3=0
+
+[WhereAmI] JumpTo 10
+// PC 178 <-- CMP_LOOP4
+[WhatDoIDo] IfZero 189
+// PC 179
+[WhereAmI] JumpTo 11
+// PC 180
+[WhatDoIDo] IfZero 193
+// PC 181
+[WhereAmI] JumpTo 10
+// PC 182
+[WhatDoIDo] Sub 1
+// PC 183
+[WhereAmI] JumpTo 11
+// PC 184
+[WhatDoIDo] Sub 1
+// PC 185
+[WhereAmI] JumpTo 12
+// PC 186
+[WhatDoIDo] Add 1
+// PC 187
+[WhatDoIDo] JumpTo 178
+// PC 188 回路
+
+[WhereAmI] JumpTo 11
+// PC 189 <-- CHECK_T2
+[WhatDoIDo] IfZero 219
+// PC 190
+[WhatDoIDo] Note
+// PC 191 NO_SWAP
+[WhatDoIDo] JumpTo 219
+// PC 192 → DONE
+
+[WhatDoIDo] FreeOther 3
+// PC 193 <-- SWAP_NEEDED
+[WhereAmI] JumpTo 14
+// PC 194
+[WhatDoIDo] Free
+// PC 195
+[WhatDoIDo] GetOther 12
+// PC 196 counter = T3
+
+[WhereAmI] JumpTo 14
+// PC 197 <-- CPY_X_LOOP
+[WhatDoIDo] IfZero 202
+// PC 198 → CPY_X_DONE
+[WhatDoIDo] Sub 1
+// PC 199
+[WhatDoIDo] AddOther 3, 1
+// PC 200
+[WhatDoIDo] JumpTo 197
+// PC 201 回路
+
+[WhatDoIDo] FreeOther 4
+// PC 202 <-- CPY_X_DONE
+[WhereAmI] JumpTo 14
+// PC 203
+[WhatDoIDo] Free
+// PC 204
+[WhatDoIDo] GetOther 12
+// PC 205 counter = T3
+
+[WhereAmI] JumpTo 14
+// PC 206 <-- CPY_Y1_LOOP
+[WhatDoIDo] IfZero 211
+// PC 207 → CPY_Y1_DONE
+[WhatDoIDo] Sub 1
+// PC 208
+[WhatDoIDo] AddOther 4, 1
+// PC 209
+[WhatDoIDo] JumpTo 206
+// PC 210 回路
+
+[WhereAmI] JumpTo 14
+// PC 211 <-- CPY_Y1_DONE
+[WhatDoIDo] Free
+// PC 212
+[WhatDoIDo] GetOther 10
+// PC 213 counter = T1 (diff)
+
+[WhereAmI] JumpTo 14
+// PC 214 <-- CPY_Y2_LOOP
+[WhatDoIDo] IfZero 219
+// PC 215 → DONE
+[WhatDoIDo] Sub 1
+// PC 216
+[WhatDoIDo] AddOther 4, 1
+// PC 217
+[WhatDoIDo] JumpTo 214
+// PC 218 回路
+
+[WhatDoIDo] Note
+// PC 219 <-- DONE_CMP4 (循环体结束 end_pc)
+
+// ═══════════════════ 输出排序结果 ═══════════════════
+[WhatDoIDo] Note ===== Sorted! =====
+// PC 220
+[WhereAmI] JumpTo 100
+// PC 221
+[WhatDoIDo] Print
+// PC 222 换行
+[WhatDoIDo] Println
+// PC 223
+[WhatDoIDo] Dump 0,5
+// PC 224 输出排序后数组
+
+// ═══════════════════ 流程总结 ═══════════════════
+//
+// Init:        PC  0-14  (15 条)
+// Outer Loop:  PC 15     (Loop 16,219,4 → 4 轮)
+//   Block 1:   PC 16-66  (51 条) CMP [0]vs[1]
+//   Block 2:   PC 67-117 (51 条) CMP [1]vs[2]
+//   Block 3:   PC 118-168(51 条) CMP [2]vs[3]
+//   Block 4:   PC 169-219(51 条) CMP [3]vs[4]
+// Output:      PC 220-224(5 条)
+//
+// 每轮冒泡将当前最大元素"浮"到正确位置。
+// 4 轮后数组完全有序: [1,2,3,5,8]
